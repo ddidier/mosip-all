@@ -1,0 +1,97 @@
+name: Build postgres-init and masterdata-loader
+
+on:
+  release:
+    types: [published]
+  pull_request:
+    types: [opened, reopened, synchronize]
+  workflow_dispatch:
+    inputs:
+      message:
+        description: 'Message for manually triggering'
+        required: false
+        default: 'Triggered for Updates'
+        type: string
+  push:
+    branches:
+      - master
+      - 1.*
+      - develop
+      - release*
+      - MOSIP*
+
+jobs:
+  build-dockers:
+    strategy:
+      matrix:
+        include:
+          - SERVICE_LOCATION: 'postgres-init'
+            SERVICE_NAME: 'postgres-init'
+          - SERVICE_LOCATION: 'masterdata'
+            SERVICE_NAME: 'masterdata-loader'
+      fail-fast: false
+    name: ${{ matrix.SERVICE_NAME }}
+    uses: mosip/kattu/.github/workflows/docker-build.yml@master
+    with:
+      SERVICE_LOCATION: ${{ matrix.SERVICE_LOCATION }}
+      SERVICE_NAME: ${{ matrix.SERVICE_NAME }}
+    secrets:
+      DEV_NAMESPACE_DOCKER_HUB: ${{ secrets.DEV_NAMESPACE_DOCKER_HUB }}
+      ACTOR_DOCKER_HUB: ${{ secrets.ACTOR_DOCKER_HUB }}
+      RELEASE_DOCKER_HUB: ${{ secrets.RELEASE_DOCKER_HUB }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DEVOPS }}
+
+  get-db-upgrade-scripts:
+    runs-on: ubuntu-latest
+    env:
+      SERVICE_LOCATION: 'postgres-upgrade'
+      BUILD_ARTIFACT: 'postgres-upgrade-scripts'
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Setup branch and env
+        run: |
+          # Strip git ref prefix from version
+          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
+          echo "GPG_TTY=$(tty)" >> $GITHUB_ENV  
+
+      - name: Clone DB upgrade scripts
+        run: |
+          cd ${{ env.SERVICE_LOCATION }}
+          bash ./get_db_data.sh ${{ env.BRANCH_NAME }}
+      - name: Ready the DB upgrade scripts
+        if: ${{ !contains(github.ref, 'master') || !contains(github.ref, 'main') }}
+        run: |
+          cd ${{ env.SERVICE_LOCATION }} 
+          find ./repos/*/db_upgrade_scripts/  -type f  -exec zip ${{ env.BUILD_ARTIFACT }}.zip {} +
+
+      - name: Upload the upgrade scripts
+        if: ${{ !contains(github.ref, 'master') || !contains(github.ref, 'main') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.BUILD_ARTIFACT }}
+          path: ${{ env.SERVICE_LOCATION }}/${{ env.BUILD_ARTIFACT }}.zip
+
+  build-upgrade-dockers:
+    needs: get-db-upgrade-scripts
+    strategy:
+      matrix:
+        include:
+          - SERVICE_LOCATION: 'postgres-upgrade'
+            SERVICE_NAME: 'postgres-upgrade'
+            BUILD_ARTIFACT: 'postgres-upgrade-scripts'
+            ONLY_DOCKER: true
+      fail-fast: false
+    name: ${{ matrix.SERVICE_NAME }}
+    uses: mosip/kattu/.github/workflows/docker-build.yml@master
+    with:
+      SERVICE_LOCATION: ${{ matrix.SERVICE_LOCATION }}
+      SERVICE_NAME: ${{ matrix.SERVICE_NAME }}
+      BUILD_ARTIFACT: ${{ matrix.BUILD_ARTIFACT }}
+      ONLY_DOCKER: ${{ matrix.ONLY_DOCKER }}
+    secrets:
+      DEV_NAMESPACE_DOCKER_HUB: ${{ secrets.DEV_NAMESPACE_DOCKER_HUB }}
+      ACTOR_DOCKER_HUB: ${{ secrets.ACTOR_DOCKER_HUB }}
+      RELEASE_DOCKER_HUB: ${{ secrets.RELEASE_DOCKER_HUB }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DEVOPS }}

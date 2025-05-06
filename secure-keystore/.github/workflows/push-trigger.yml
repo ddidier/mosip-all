@@ -1,0 +1,40 @@
+name: Gradlew build, publish to npm registry and sonar-analysis
+on:
+  release:
+    types: [published]
+  pull_request:
+    types: [opened, reopened, synchronize]
+  workflow_dispatch:
+    inputs:
+      message:
+        description: 'Message for manually triggering'
+        required: false
+        default: 'Triggered for Updates'
+        type: string
+  push:
+    branches:
+      - '!release-branch'
+      - release*
+      - master
+      - 1.*
+      - develop*
+      - MOSIP*
+jobs:
+  build-kotlin:
+    uses: mosip/kattu/.github/workflows/gradle-build.yml@master
+    with:
+      SERVICE_LOCATION: kotlin/android
+      JAVA_VERSION: 17
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_INJI_TEAM }}
+
+  sonar-analysis-kotlin:
+    needs: build-kotlin
+    if: "${{  github.event_name != 'pull_request' }}"
+    uses: mosip/kattu/.github/workflows/gradlew-sonar-analysis.yml@master-java21
+    with:
+      SERVICE_LOCATION: kotlin/android
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_ORGANIZATION: ${{ secrets.ORG_KEY }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_INJI_TEAM }}

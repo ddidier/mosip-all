@@ -1,0 +1,306 @@
+{
+  "PageTemplate": {
+    "Header": {
+      "home": "Accueil",
+      "help": "Aide"
+    },
+    "Footer": {
+      "product": "Un produit MOSIP",
+      "copyRight": "© 2024 MOSIP. Tous droits réservés."
+    }
+  },
+  "HomePage": {
+    "Banner": {
+      "heading": "Accédez et gérez facilement vos identifiants numériques",
+      "description": "Rendez vos données portables en toute confiance. Gérez en toute sécurité vos documents numériques avec notre portefeuille web facile à utiliser.",
+      "buttontext": "Commencer"
+    },
+    "Features": {
+      "heading": "Caractéristiques de Inji Wallet",
+      "description1": "Gestion transparente et sécurisée des identifiants vérifiables",
+      "description2": "pour des interactions numériques de confiance."
+    },
+    "FeatureItem1": {
+      "heading": "Accédez à vos identifiants, où que vous soyez",
+      "item1": "Identifiants simplifiés",
+      "description1": "Gardez tous vos documents essentiels",
+      "item2": "Plus de paperasse. Tout en un seul endroit",
+      "description2": "Téléchargez, stockez et récupérez facilement vos documents. Gagnant, gagnant, gagnant."
+    },
+    "FeatureItem2": {
+      "heading": "Vos documents téléchargés en une seconde",
+      "item1": "Téléchargez en toute confiance",
+      "description1": "Enregistrez instantanément vos documents importants",
+      "item2": "Sûr et sécurisé",
+      "description2": "Téléchargez des pièces d'identité, des licences et plus encore, en un seul endroit sécurisé."
+    },
+    "FeatureItem3": {
+      "heading": "Partage facile",
+      "item1": "Partagez avec un code QR",
+      "description1": "Partagez facilement vos pièces d'identité et certificats en déplacement. Présentez simplement le code QR de votre document, à scanner et partager.",
+      "item2": "Lire, définir, partager",
+      "description2": "Code QR vérifié en temps réel."
+    },
+    "FeatureItem4": {
+      "heading": "Sécurisé et privé",
+      "item1": "Vos identifiants, protégés",
+      "description1": "Vos données restent privées, grâce au mécanisme de sécurité intégré.",
+      "item2": "Restez tranquille",
+      "description2": "Gardez vos identifiants en sécurité, pour que vous puissiez vous concentrer sur l'essentiel."
+    },
+    "FeatureItem5": {
+      "heading": "Accès et compatibilité étendus",
+      "item1": "Disponible sur votre navigateur préféré",
+      "description1": "Inji Wallet fonctionne avec Chrome, Safari, Firefox et Edge.",
+      "item2": "Toujours à portée de main",
+      "description2": "La commodité rencontre l'accessibilité où que vous soyez, garantissant que vos documents sont toujours à portée de main."
+    },
+    "QuickTip": {
+      "heading": "Conseils rapides pour télécharger instantanément vos identifiants",
+      "toastText":"à venir",
+      "buttontext": "Cliquez ici"
+    }
+  },
+  "IssuersPage": {
+    "Intro": {
+      "title": "Accéder à vos informations d’identification vérifiables",
+      "title2":"en toute simplicité !",
+      "subTitle": "Téléchargez et partagez en toute sécurité vos informations d'identification instantanément.",
+      "searchText": "Rechercher des émetteurs par nom"
+    },
+    "emptyContainerContent": "Aucun émetteur trouvé. ",
+    "containerHeading": "Liste des émetteurs",
+    "containerSubHeading": "Recherchez votre émetteur de confiance et choisissez un type d'identifiant à l'étape suivante.",
+    "errorContent": "Le service est actuellement indisponible. "
+  },
+  "CredentialsPage": {
+    "searchText": "Rechercher un type d'identifiant",
+    "emptyContainerContent": "Aucune information d'identification trouvée. ",
+    "containerHeading": "Liste des types d'informations d'identification",
+    "containerSubHeading": "Choisissez un identifiant et confirmez votre identité à l'étape suivante.",
+    "errorContent": "Le service est actuellement indisponible.",
+    "errors": {
+      "authorizationGrantTypeNotSupportedByWallet": {
+        "code": "Erreur d'autorisation du type d'octroi non pris en charge!",
+        "message": "Merci pour votre patience ! Nous rencontrons actuellement des difficultés techniques. Veuillez réessayer plus tard ou contacter l'administrateur pour obtenir de l'aide!"
+      }
+    }
+  },
+  "RedirectionPage": {
+    "navigateButton": "Aller à la maison",
+    "loading": {
+      "title": "Téléchargement en cours...",
+      "subTitle": "Veuillez patienter un instant ! "
+    },
+    "success": {
+      "title": "Succès!",
+      "subTitle": "Vérifiez votre dossier de téléchargements !"
+    },
+    "error": {
+      "invalidSession": {
+        "title": "Session invalide",
+        "subTitle": "la session n'est pas valide ou la session est terminée"
+      },
+      "verification": {
+        "err_missing_issuancedate": {
+          "title": "Date d'émission invalide",
+          "subTitle": "La date d'émission est invalide ou fixée dans le futur. "
+        },
+        "err_invalid_issuancedate": {
+          "title": "Date d'émission invalide",
+          "subTitle": "La date d'émission est invalide ou fixée dans le futur. "
+        },
+        "err_issuance_date_is_future_date": {
+          "title": "Date d'émission invalide",
+          "subTitle": "La date d'émission est invalide ou fixée dans le futur. "
+        },
+        "err_invalid_expirationdate": {
+          "title": "Date d'expiration invalide",
+          "subTitle": "La date d'expiration n'est pas valide. "
+        },
+        "err_vc_expired": {
+          "title": "Date d'expiration invalide",
+          "subTitle": "La date d'expiration n'est pas valide. "
+        },
+        "err_invalid_validfrom": {
+          "title": "Date de début invalide",
+          "subTitle": "La date n'est pas valide ou est définie dans le futur. "
+        },
+        "err_valid_from_is_future_date": {
+          "title": "Date de début invalide",
+          "subTitle": "La date n'est pas valide ou est définie dans le futur. "
+        },
+        "err_invalid_validuntil": {
+          "title": "Date de fin invalide",
+          "subTitle": "La date n'est pas valide. "
+        }
+      },
+      "generic": {
+        "title": "Une erreur s'est produite",
+        "subTitle": "En raison d'une erreur technique, nous n'avons pas pu télécharger la carte"
+      }
+    }
+  },
+  "AuthorizationPage": {
+    "error": {
+      "code": {
+        "invalid_redirect_uri": "Accès refusé!",
+        "invalid_client": "Accès refusé!"
+      },
+      "message": {
+        "invalid_redirect_uri": "Les informations d’identification ne peuvent pas être partagées car nous n’avons pas pu identifier qui les a demandées. ",
+        "invalid_client": "Les informations d’identification ne peuvent pas être partagées car nous n’avons pas pu identifier qui les a demandées. "
+      }
+    }
+  },
+  "PageNotFound": {
+    "navigateButton": "Aller à la maison",
+    "heading": "C'est une erreur",
+    "subHeading": "L'URL demandée {{pathname}} n'a pas été trouvé sur ce serveur."
+  },
+  "HelpPage": {
+    "title": "Aide"
+  },
+  "HelpDropdown":{
+    "heading":"Aide",
+    "item1":"Questions fréquemment posées"
+  },
+  "Help": {
+    "item1": {
+      "title": "Qui sont les émetteurs ?",
+      "description1": "Les émetteurs sont soit des organismes gouvernementaux, soit des entités de confiance du gouvernement, chargés de fournir des informations d'identification vérifiables au format PDF aux résidents sur demande."
+    },
+    "item2": {
+      "title": "Que sont les informations d’identification vérifiables ?",
+      "description1": "Les informations d'identification vérifiables sont des documents numériques qui aident les utilisateurs à partager des informations telles que l'identité ou les qualifications avec le fournisseur de services, qui peuvent être instantanément vérifiées. "
+    },
+    "item3": {
+      "title": "Comment puis-je télécharger un identifiant dans Inji Wallet ?",
+      "description1": "Étape 1 : Recherchez et choisissez un émetteur sur la page de destination et sélectionnez un type d'informations d'identification.",
+      "description2": "Étape 2 : Sur la page d'authentification, fournissez les détails requis.",
+      "description3": "Étape 3 : Le format PDF des informations d'identification vérifiables sera téléchargé dans le système."
+    },
+    "item4": {
+      "title": "Quelles informations dois-je fournir pour télécharger mon identifiant ?",
+      "description1": "L'émetteur des titres de compétences aurait fourni des détails tels que UIN/VID en cas d'identification nationale MOSIP ou de numéro de police, nom et date de naissance pour une carte d'assurance. "
+    },
+    "item5": {
+      "title": "Où puis-je trouver mon identifiant ?",
+      "description1": "Les informations d'identification vérifiables seront téléchargées dans le dossier Téléchargements de votre système."
+    },
+    "item6": {
+      "title": "Quels détails sont présents dans les informations d'identification PDF ?",
+      "description1": "Les détails recueillis dans le cadre du processus d’inscription seront présentés dans le PDF. "
+    },
+    "item7": {
+      "title": "Pourquoi je ne trouve pas la liste des émetteurs ?",
+      "description1": "Les raisons possibles de ce problème incluent :",
+      "description2": "1. Des erreurs techniques peuvent rendre le service temporairement indisponible, vous empêchant d'accéder à la liste des émetteurs.",
+      "description3": "2. Aucun émetteur n'a été configuré.",
+      "description4": "Dans les deux cas, veuillez contacter votre équipe technique pour résoudre le problème."
+    },
+    "item8":{
+      "title": "Que se passe-t-il lorsque je génère un justificatif vérifiable (VC) dans l'interface Web d'Inji Wallet ?",
+      "description1": "1. Vous sélectionnez un émetteur et le type de justificatif.",
+      "description2": "2. Redirige vers la page de connexion de l'émetteur pour l'authentification.",
+      "description3": "3. Après la connexion, l'émetteur fournit le VC, stocké de manière sécurisée au format JSON à l'aide de Durian. ",
+      "description4": "4. Un PDF avec les détails du VC et un code QR est généré.",
+      "description5": "5. Le code QR renvoie à l'URL de stockage du VC pour un partage facile."
+      },
+      "item9": {
+      "title": "Quel est le rôle du code QR dans le PDF des justificatifs ?",
+      "description1": "Le code QR dans le PDF renvoie à l'URL de stockage sécurisée du VC, ce qui facilite la numérisation et la récupération des justificatifs sans données denses."
+      },
+      "item10":{
+        "title": "Comment l'interface Web d'Inji Wallet garantit-elle que ma VC est stockée en toute sécurité ?",
+        "description1": "S'intègre au service de partage de données (Durian) de la plateforme d'identification MOSIP, stockant la VC sous forme d'objet JSON avec un accès protégé uniquement pour les vérificateurs autorisés."
+      },
+      "item11":{
+        "title": "Comment fonctionne la fonction de partage en ligne avec Inji Verify ?",
+        "description1": "1. Le PDF VC contient un code QR.",
+        "description2": "2. Le PDF peut être imprimé ou enregistré sur un téléphone. ",
+        "description3": "3. Le vérificateur (par exemple, Inji Verify) scanne le code QR. ",
+        "description4": "4. Inji Wallet autorise et partage la VC avec le vérificateur."
+      },
+      "item12":{
+        "title": "Pourquoi intégrer une URL dans le code QR au lieu des données VC complètes ?",
+        "description1": "L'intégration d'une URL réduit la densité du code QR pour une numérisation facile, permettant une vérification efficace entre appareils ou à distance."
+      },
+      "item13":{
+        "title": "Puis-je partager mon VC en ligne et hors ligne ?",
+        "description1": "1. En ligne : le vérificateur peut numériser à partir d'un PDF ou d'un écran de téléphone, et Inji Wallet autorise et partage le VC. ",
+        "description2": "2. Hors ligne : le PDF imprimé peut être présenté pour la numérisation et la récupération du VC."
+      },
+      "item14":{
+        "title": "Comment Inji Wallet vérifie-t-il et autorise-t-il le vérificateur pendant le partage en ligne ?",
+        "description1": "Les informations d'identification du vérificateur sont vérifiées à partir d'une liste interne. S'il est autorisé, Inji Wallet avec interface Web renvoie le VC au vérificateur en toute sécurité à l'aide d'un vp_token."
+      },
+      "item15":{
+        "title": "Qu'est-ce qu'OpenID4VP et comment est-il utilisé dans Inji Wallet ?",
+        "description1": "La norme OpenID4VP (OpenID for Verifiable Presentations) permet le partage sécurisé de VC. Inji Wallet génère un code QR pour le stockage des VC, permettant aux vérificateurs comme Inji Verify de demander et de recevoir des VC en toute sécurité."
+      },
+      "item16":{
+        "title": "Comment savoir si mon VC a été partagé en toute sécurité à l'aide d'Inji Wallet ??",
+        "description1": "Une fois que le vérificateur a scanné le code QR et qu'Inji Wallet l'a autorisé, le VC est fourni en toute sécurité au vérificateur, qui le valide et le confirme ensuite."
+      },
+      "item17":{
+        "title": "Que se passe-t-il si le code QR est scanné sur un appareil différent de celui sur lequel le VC a été généré ?",
+        "description1": "Prend en charge le partage entre appareils. Le vérificateur peut numériser à partir de n'importe quelle copie du PDF VC, et Inji Wallet vérifie et partage le VC en toute sécurité."
+      },
+      "item18":{
+        "title": "Inji Wallet peut-il prendre en charge différents formats de code QR ?",
+        "description1": "Oui. La génération basée sur la configuration permet aux codes QR de contenir : ",
+        "description2": "1. URL vers le stockage VC pour un partage facile, ou ",
+        "description3": "2. Données VC complètes au format JSON (format plus dense)."
+      },
+      "item19":{
+        "title": "Comment Inji Wallet gère-t-il la vérification des informations d'identification après le partage ?",
+        "description1": "Après le partage, Inji Verify vérifie l'authenticité du VC. Si elle est valide, le vérificateur confirme le statut de vérification des informations d'identification."
+      },
+      "item20":{
+        "title": "Quels types d'émetteurs d'informations d'identification sont pris en charge ?",
+        "description1": "Tout émetteur qui suit le protocole OpenID4VCI peut être approuvé dans Inji Wallet. Ces émetteurs fournissent les données nécessaires à l'émission et au téléchargement de VC."
+      },
+      "item21": {
+        "title": "Où puis-je trouver des informations plus détaillées sur les fonctionnalités introduites dans cette version ?",
+        "description1": "Consultez la <a href=\"https://docs.mosip.io/inji/inji-web/overview\" target=\"_blank\">documentation d'Inji Wallet</a> pour obtenir des étapes détaillées, des aperçus du système et des descriptions des nouvelles fonctionnalités."
+      },
+      "item22":{
+        "title": "Comment démarrer avec la fonctionnalité de partage en ligne dans Inji Wallet ?",
+        "description1": "Accédez aux VC via l'interface Web d'Inji Wallet, téléchargez et utilisez le code QR pour partager des informations d'identification en personne ou en ligne avec des vérificateurs. Détails dans le <a href=\"https://docs.mosip.io/inji/inji-web/function-overview/end-user-guide\" target=\"_blank\">guide de l'utilisateur </a>."
+      },
+      "item23":{
+        "title": "Comment puis-je basculer entre le VC intégré et le partage en ligne dans Inji Wallet ?",
+        "description1": "Configurer le qr_code_type dans les paramètres de l'émetteur Mimoto : ",
+        "description2": "1. EmbeddedVC : intègre le VC complet au format JSON (code QR plus dense) pour une utilisation hors ligne.",
+        "description3": "2. OnlineSharing : génère un code QR avec une URL vers le stockage VC en ligne, ce qui facilite la numérisation et le partage en ligne."
+        }
+  },
+  "DataShareExpiryModal": {
+    "title": "Validité du partage",
+    "subTitle": "Veuillez donner votre consentement pour définir une validité pour le partage du {{credentialName}}",
+    "content": {
+      "selectedDocument": "Document sélectionné",
+      "consent": "Validité du consentement *",
+      "validityTimesHeader": "Nombre de fois",
+      "validityTimesOptions": {
+        "once": "Une fois",
+        "thrice": "Trois fois",
+        "noLimit": "Aucune limite",
+        "custom": "Coutume"
+      },
+      "validityDate": "Date"
+    },
+    "success": "Procéder",
+    "cancel": "Dos",
+    "disclaimer": "Veuillez noter que le QR Code ne peut être partagé que le nombre de fois que vous avez choisi ici. ",
+    "toastText":"À venir"
+  },
+  "CustomExpiryModal": {
+    "title": "Veuillez saisir le nombre de fois que vous souhaitez utiliser cet identifiant ",
+    "error": "Veuillez saisir un numéro d'expiration valide supérieur à zéro. La limite maximale est de 50 pour contrôler les tentatives de vérification.",
+    "metrics": "Fois",
+    "success": "Procéder",
+    "cancel": "Annuler"
+  }
+}

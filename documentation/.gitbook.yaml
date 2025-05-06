@@ -1,0 +1,8 @@
+root: ./docs/
+
+structure:
+    summary: summary.md
+
+redirect:
+    inji: biometrics.md
+    modules/compliance-tool-kit: biometrics.md

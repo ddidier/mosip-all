@@ -1,0 +1,160 @@
+<div style="padding: 12px;">
+  <span class="breadcrumb breadcrumb-local" [style.font-size]="fontSize.breadcrumb">
+    <a (click)="onItemSelected('home')">{{'dashboard.home' | translate}} &nbsp;&nbsp;</a> >&nbsp;&nbsp;<a
+      (click)="onItemSelected('home')">{{'dashboard.getinformation' | translate}}</a> &nbsp;&nbsp;>&nbsp;&nbsp;<span
+      class="active">{{'dashboard.regcenter' | translate}}</span>
+  </span>
+  <div class="spinner" *ngIf="!isWorkingDaysAvailable">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div class="details-main-card" *ngIf="isWorkingDaysAvailable">
+    <div class="details-card">
+      <mat-tab-group class="tabs" (selectedTabChange)="onItemSelected($event)">
+        <mat-tab  label="{{'dashboard.regcenter' | translate}}"></mat-tab>
+        <mat-tab  label="{{'dashboard.document' | translate}}"></mat-tab>
+      </mat-tab-group>
+      <div [dir]="textDir" class="center_selection-wrapper" *ngIf="isWorkingDaysAvailable">
+        <div>
+          <div class="centers-wrapper">
+            <div class="center_selection-intial-recommendation-container" *ngIf="searchClick; else elseBlock">
+              <span class="spacer"></span>
+            </div>
+            <ng-template #elseBlock>
+              <div [dir]="textDir" class="center_selection-form-container">
+                <!-- <div *ngIf="REGISTRATION_CENTRES" class="center_selection-center_recommendation-display"> -->
+                <button id="nearByLocations" [style.font-size]="fontSize.paragraph" mat-button class="center_selection-nearby-btn" (click)="getLocation()">
+                  <mat-icon class="my-location-icon" matTooltip="{{ 'centerSelection.helpText' | translate }}"
+                    [inline]="true">my_location</mat-icon>&nbsp;&nbsp;
+                  {{ 'centerSelection.action_nearBy' | translate }}
+                </button>
+                <span class="or-text">{{ 'centerSelection.or' | translate }}</span>
+                <!-- </div> -->
+                <form class="search-form-card" >
+                  <div class="search-form">
+                    <div class="manual-loc-search-card">
+                      <mat-card class="select-card">
+                        <mat-select id="locationType" [style.font-size]="fontSize.paragraph" disableOptionCentering name="select" class="select-input" [(ngModel)]="locationType"
+                          value="locationType" (selectionChange)="onChangeLocationType()"
+                          placeholder="{{ 'centerSelection.text_select' | translate }}">
+                          <mat-option  [style.font-size]="fontSize.paragraph" class="locationType-card" *ngFor="let locationType of locationTypes; let i = index"
+                            [value]="locationType" id="hierarchyLevel{{i}}">
+                            {{ locationType.hierarchyLevelName }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-card>
+                      <mat-card class="search-card">
+                        <input [style.font-size]="fontSize.paragraph" [disabled]="!locationType" mat-input #search
+                          placeholder="{{ 'centerSelection.text_search' | translate }}" name="search" class="search-input"
+                          [(ngModel)]="searchText" (input)="searchInput()" (blur)="captureValue($event)"
+                          (focus)="captureVirtualKeyboard(search, 0)" id="searchLocationBox" #keyboardRef />
+                        <em *ngIf="locationType" style="float: right; color: grey; cursor: pointer;" matSuffix
+                          class="material-icons" (click)="openKeyboard('searchLocationBox')">keyboard</em>
+                      </mat-card>
+                    </div>
+                    <div class="manual-loc-search-btns" > 
+                      <button id="regCenterSearchBtn" [disabled]="isBlankSpace" mat-raised-button (click)="showResults()" class="search-btn">
+                        <mat-icon>search</mat-icon>
+                      </button>
+                      &nbsp;
+                      <button id="regCentersDownloadBtn" *ngIf="REGISTRATION_CENTRES.length >0" mat-raised-button (click)="downloadCentersPdf()" class="save-icon-btn">
+                        <img alt="" class="save-icon" src="./assets/icons/iconfont/download-1.svg" />
+                      </button>
+                      &nbsp;
+                      <button id="showMapBtn" *ngIf="REGISTRATION_CENTRES?.length >0" class="show-map-btn" (click)="showAllCenters()">{{ popupMessages.centerSelection.showMapBtnLabel }}</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <p [style.font-size]="fontSize.warningMessages" *ngIf="showWarningMsg" class="warning-message">{{popupMessages.centerSelection.warnMessage}}</p>
+              <hr class="horizontal-line" />
+              <!-- <span class="search-text" *ngIf="searchTextFlag">{{ displayMessage }}</span> -->
+            </ng-template>
+            <div class="container">
+              <h4 [style.font-size]="fontSize.paragraph" *ngIf="showMessage" class="show-message-text">{{showMesssageText}}</h4>
+              <div *ngIf="showLocationDetails" class="centers-details-card">
+                <div class="centers-list">
+                  <div *ngIf="REGISTRATION_CENTRES.length >0">
+                    <ul>
+                      <li *ngFor="let center of REGISTRATION_CENTRES; let i = index;">
+                        <div [ngClass]="REGISTRATION_CENTRES.length === i+1 ? 'center-card item' :'center-card'">
+                          <div style="width: 40%;cursor:pointer;" (click)="selectedEachMap(center)">
+                            <div class="inline-flex" [dir]="textDir">
+                              <img alt="" src="assets\address.png" />
+                              <div [style.font-size]="fontSize.warningMessages" style="word-break: break-word;">
+                                <strong>{{center.name}}</strong>
+                                <strong *ngIf="center.addressLine1 != null && center.addressLine1 != ''">
+                                  {{ ', ' + center.addressLine1}}
+                                </strong>
+                                <strong *ngIf="center.addressLine2 != null && center.addressLine2 != ''">
+                                  {{ ', ' + center.addressLine2}}
+                                </strong>
+                                <strong *ngIf="center.addressLine3 != null && center.addressLine3 != ''">
+                                  {{ ', ' + center.addressLine3}}
+                                </strong>
+                              </div>
+                            </div>
+                            <div class="inline-flex2" [style.font-size]="fontSize.warningMessages">
+                              <span *ngIf="center.contactPerson !== ''"><img alt=""
+                                  src="assets\contact number.png" /></span>
+                              <span *ngIf="center.contactPerson !== ''">
+                                {{ center.contactPerson}}, <span
+                                  *ngIf="center.contactPerson !== '' && center.contactPhone !== ''">{{ center.contactPhone
+                                  }}</span>
+                              </span>
+                            </div>
+                          </div>
+                          <span style="width: 5%;" class="spacer"></span>
+                          <div style="width: 55%;" [style.font-size]="fontSize.warningMessages" >
+                            <div >
+                              <span>
+                                <div [dir]="textDir">
+                                  {{ 'centerSelection.text_timing' | translate }} :
+                                  <span dir="ltr">
+                                    {{
+                                    showTime(center.centerStartTime.substring(0, 5), center.centerEndTime.substring(0, 5))
+                                    }}
+                                  </span>
+                                </div>
+                                <div [dir]="textDir">
+                                  <span
+                                    *ngIf="center.lunchStartTime !== null && center.lunchEndTime !== null && center.lunchStartTime !== center.lunchEndTime">
+                                    {{ 'centerSelection.lunch_hours' | translate }}:
+                                    <span dir="ltr">
+                                      {{
+                                      showTime(center.lunchStartTime.substring(0, 5),center.lunchEndTime.substring(0, 5))
+                                      }}
+                                    </span>
+                                  </span>
+                                </div>
+                              </span>
+                            </div>
+                            <div [dir]="textDir">
+                              <span>{{ 'centerSelection.text_open' | translate }}: {{ center.workingDays }}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="pagination" dir="ltr">
+                  <span *ngIf="this.totalItems !== 0">
+                    <mat-paginator #paginator (page)="showResults(pageEvent = $event)" [length]="this.totalItems"
+                      [pageSize]="this.pageSize" [showFirstLastButtons]="showFirstLastButtons"
+                      [pageSizeOptions]="this.pageSizeOptions" [pageIndex]="pageIndex" aria-label="Select page">
+                    </mat-paginator>
+                  </span>
+                </div>
+              </div>
+              <div class="map" *ngIf="showMap">
+                <button *ngIf="showBackBtn" mat-button-toggle id="getUinBackBtn" (click)="backBtn()" class="back-btn"><img src="./assets/images/arrow_back_black_24dp.png"
+                  alt="" />{{ popupMessages.centerSelection.action_back }}</button>
+                <app-map style="width:100%; height: auto;" [mapProvider]="mapProvider"></app-map>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>

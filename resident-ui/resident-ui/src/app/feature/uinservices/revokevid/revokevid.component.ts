@@ -1,0 +1,482 @@
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { DataStorageService } from 'src/app/core/services/data-storage.service';
+import { TranslateService } from "@ngx-translate/core";
+import { Subscription } from "rxjs";
+import { Router } from "@angular/router";
+import Utils from 'src/app/app.utils';
+import { AppConfigService } from 'src/app/app-config.service';
+import { DialogComponent } from 'src/app/shared/dialog/dialog.component';
+import { MatDialog } from '@angular/material';
+import { InteractionService } from "src/app/core/services/interaction.service";
+import {saveAs} from 'file-saver';
+import { AuditService } from "src/app/core/services/audit.service";
+import { AutoLogoutService } from "src/app/core/services/auto-logout.service";
+import { BreakpointService } from "src/app/core/services/breakpoint.service";
+import { FontSizeService } from "src/app/core/services/font-size.service";
+
+@Component({
+  selector: "app-revokevid",
+  templateUrl: "revokevid.component.html",
+  styleUrls: ["revokevid.component.css"],
+})
+export class RevokevidComponent implements OnInit, OnDestroy {
+  langJSON: any;
+  popupMessages: any;
+  subscriptions: Subscription[] = [];
+  selectedValue: string = "generatevid";
+  vidlist: any;
+  policyType: any;
+  vidType: string = "";
+  notificationType: Array<string> = [];
+  vidValue: string = "";
+  finalTypeList = {};
+  clickEventSubscription: Subscription;
+  newVidType: any;
+  message: string;
+  newVidValue:string;
+  rowHeight:string = "2:1.2";
+  cols:number;
+  infoText:any;
+  eventId:any;
+  errorCode:string;
+  message2:any;
+  userPreferredLangCode = localStorage.getItem("langCode");
+  isLoading:boolean = true;
+  sitealignment:string = localStorage.getItem('direction');
+
+  constructor(private autoLogout: AutoLogoutService, private interactionService: InteractionService, private dialog: MatDialog, private appConfigService: AppConfigService, private dataStorageService: DataStorageService, private translateService: TranslateService, private router: Router,
+    private auditService: AuditService, private breakPointService: BreakpointService,
+    private fontSizeService: FontSizeService) {
+    this.clickEventSubscription = this.interactionService.getClickEvent().subscribe((id) => {
+      if (id === "confirmBtnForVid") {
+        this.generateVID(this.newVidType)
+        if(this.newVidType === "Perpetual"){
+          this.auditService.audit('RP-013', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "Generate perpetual VID" button', '');
+        }else if(this.newVidType === "Temporary"){
+          this.auditService.audit('RP-021', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "Generate temporary VID" button', '');
+        }else{
+          this.auditService.audit('RP-017', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "Generate one-time VID" button', '');
+        }
+      }else if (id === "deleteVID"){
+        this.revokeVID(this.newVidValue)
+        if(this.newVidType === "Perpetual"){
+          this.auditService.audit('RP-014', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "revoke perpetual VID" button','');
+        }else if(this.newVidType === "Temporary"){
+          this.auditService.audit('RP-022', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "revoke temporary VID" button', '');
+        }else{
+          this.auditService.audit('RP-018', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "revoke one-time  VID" button', '');
+        }
+      }else if(id === "downloadVID"){
+        this.vidDownloadStatus(this.newVidValue)
+        if(this.newVidType === "Perpetual"){
+          this.auditService.audit('RP-015', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "User clicks on "download perpetual VID" button', '');
+        }else if(this.newVidType === "Temporary"){
+          this.auditService.audit('RP-023', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "download temporary VID" button', '');
+        }else{
+          this.auditService.audit('RP-019', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "download one-time  VID" button', '');
+        }
+      }
+      
+    });
+
+    this.breakPointService.isBreakpointActive().subscribe(active =>{
+      if (active) {
+        if(active === "extraSmall" || active === "small"){
+          this.cols = 1;
+        }
+        if(active === "ExtraLarge"){
+          this.cols = 4;
+        }
+        if(active === "medium"){
+          this.cols = 2;
+        }
+        if(active === "large"){
+          this.cols = 3;
+        }
+      }
+    });
+  }
+
+  async ngOnInit() {
+    this.translateService.use(localStorage.getItem("langCode"));
+    this.translateService
+      .getTranslation(localStorage.getItem("langCode"))
+      .subscribe(response => {
+        this.langJSON = response.managemyvid;
+        this.popupMessages = response;
+        this.infoText = this.popupMessages.InfomationContent.revokevid
+      });
+    this.getVID();
+
+    const subs = this.autoLogout.currentMessageAutoLogout.subscribe(
+      (message) => (this.message2 = message) //message =  {"timerFired":false}
+    );
+
+    this.subscriptions.push(subs);
+
+    if (!this.message2["timerFired"]) {
+      this.autoLogout.getValues(this.userPreferredLangCode);
+      this.autoLogout.setValues();
+      this.autoLogout.keepWatching();
+    } else {
+      this.autoLogout.getValues(this.userPreferredLangCode);
+      this.autoLogout.continueWatching();
+    }
+
+  }
+
+  getVID() {
+    this.dataStorageService
+      .getVIDs()
+      .subscribe((response) => {
+        if (response["response"]){
+          this.vidlist = response["response"];
+        this.getPolicy();
+        }else{
+          this.showErrorPopup(response["errors"])
+        }
+      });
+  }
+
+  getPolicy() {
+    let self = this;
+    let results = [];
+    self.finalTypeList = {};
+    this.dataStorageService.getPolicy().subscribe(response => {
+      if (response) {
+        this.policyType = response;
+        this.isLoading = false;
+        for (var i = 0; i < this.policyType.vidPolicies.length; i++) {
+          results = [];
+          for (var j = 0; j < self.vidlist.length; j++) {
+            if (self.vidlist[j].vidType.toUpperCase() === this.policyType.vidPolicies[i].vidType.toUpperCase()) {
+              self.vidlist[j].showvid = false;
+              results.push(self.vidlist[j]);
+            }
+          }
+          self.finalTypeList[this.policyType.vidPolicies[i].vidType] = results;
+        }
+      }
+
+    },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
+  onResize(event:any){
+    
+  }
+
+  displayVid(finalTypeList, policyType, policy, showvid) {
+    if(policyType === "Perpetual"){
+      this.auditService.audit('RP-016', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "User clicks on "eye" icon to unmask the perpetual VID', '');
+    }else if(policyType === "Temporary"){
+      this.auditService.audit('RP-024', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "eye" icon to unmask the temporary VID', '');
+    }else{
+      this.auditService.audit('RP-020', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "eye" icon to unmask the one-time VID', '');
+    }
+    let self = this;
+    let results = [];
+    for (var j = 0; j < self.vidlist.length; j++) {
+      if (self.vidlist[j].vidType.toUpperCase() === policyType.toUpperCase()) {
+        if (self.vidlist[j].vid === policy.vid) {
+          self.vidlist[j].showvid = showvid;
+        } else {
+          self.vidlist[j].showvid = false;
+        }
+        results.push(self.vidlist[j]);
+      }
+    }
+    self.finalTypeList[policyType] = results;
+  }
+
+  setvidType(event: any) {
+    this.vidType = "";
+    this.vidType = event.value;
+  }
+
+  sendNotification(event: any) {
+    if (!this.notificationType.includes(event.source.value)) {
+      this.notificationType.push(event.source.value);
+    } else {
+      this.notificationType.forEach((item, index) => {
+        if (item === event.source.value) this.notificationType.splice(index, 1);
+      });
+    }
+  }
+
+  generateVIDBtn(vidType: any) {
+    this.newVidType = vidType
+    this.showWarningMessage(vidType)
+  }
+
+  generateVID(vidType: any) {
+    this.isLoading = true;
+    let transactionID = window.crypto.getRandomValues(new Uint32Array(1)).toString();
+    if (transactionID.length < 10) {
+      let diffrence = 10 - transactionID.length;
+      for(let i=0; i < diffrence; i++){
+          transactionID = transactionID + i
+      }
+    } 
+    let self = this;
+    const request = {
+      "id": this.appConfigService.getConfig()["resident.vid.id.generate"],
+      "version": this.appConfigService.getConfig()["resident.vid.version.new"],
+      "requesttime": Utils.getCurrentDate(),
+      "request": {
+        "transactionID": transactionID,
+        "vidType": vidType,
+        "channels": ["PHONE", "EMAIL"]
+      }
+    };
+    this.dataStorageService.generateVID(request).subscribe(response => {
+      this.message = this.popupMessages.genericmessage.manageMyVidMessages.createdSuccessfully
+      this.eventId = response.headers.get("eventId")
+      if (!response.body["errors"].length) {
+        setTimeout(() => {
+          self.getVID();
+        }, 400);
+        this.isLoading = false;
+        this.showMessage(this.message.replace("$eventId", this.eventId ),this.eventId);
+      } else {
+        this.isLoading = false;
+        this.showErrorPopup(response.body["errors"]);
+      }
+    });
+  }
+
+  downloadVIDBtn(vid:any,vidType:any){
+    this.showDownloadMessage(vidType)
+    this.newVidValue = vid
+    this.newVidType = vidType
+  }
+
+  vidDownloadStatus(vid:any){
+    this.isLoading = true;
+      this.dataStorageService.vidDownloadStatus(vid).subscribe(response =>{
+        this.eventId = response.headers.get("eventid")
+        this.message = this.popupMessages.genericmessage.manageMyVidMessages.downloadedSuccessFully.replace("$eventId", this.eventId)
+        if(!response.body['errors'].length){
+          this.isLoading = false;
+          this.successMsgForDownload(this.message, this.eventId)
+          // setTimeout(()=>{
+          //   this.downloadVidCard(this.eventId)
+          // },120000)
+        }else{
+          this.isLoading = false;
+          this.showErrorPopup(response.body['errors'])
+        }
+      },
+      error =>{
+        console.log(error)
+      })
+  }
+
+  downloadVidCard(eventId:any){
+     this.dataStorageService.downloadVidCardStatus(eventId).subscribe(response =>{
+      let fileName = ""
+      const contentDisposition = response.headers.get('Content-Disposition');
+      console.log(contentDisposition)
+      if (contentDisposition) {
+        const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+        const matches = fileNameRegex.exec(contentDisposition);
+        if (matches != null && matches[1]) {
+          fileName = matches[1].replace(/['"]/g, '');
+        }
+      }
+      saveAs(response.body, fileName);
+     })
+  }
+
+  
+
+  revokeVIDBtn(vidValue: any,vidType:any){
+    this.showDeleteMessage(vidType)
+    this.newVidValue = vidValue
+    this.newVidType = vidType
+  }
+
+  revokeVID(vidValue: any) {
+    this.isLoading = true;
+    let transactionID = window.crypto.getRandomValues(new Uint32Array(1)).toString();
+    if (transactionID.length < 10) {
+      let diffrence = 10 - transactionID.length;
+      for(let i=0; i < diffrence; i++){
+          transactionID = transactionID + i
+      }
+    } 
+    let self = this;
+    const request = {
+      "id": this.appConfigService.getConfig()["mosip.resident.revokevid.id"],
+      "version": this.appConfigService.getConfig()["resident.revokevid.version.new"],
+      "requesttime": Utils.getCurrentDate(),
+      "request": {
+        "transactionID": transactionID,
+        "vidStatus": "REVOKED"
+      }
+    };
+    this.dataStorageService.revokeVID(request, vidValue).subscribe(response => {
+      this.eventId = response.headers.get("eventid")
+      this.message = this.popupMessages.genericmessage.manageMyVidMessages.deletedSuccessfully.replace("$eventId", this.eventId)
+      if (!response.body["errors"].length) {
+       this.isLoading = false;
+        setTimeout(() => {
+          self.getVID();
+          // this.showMessage(this.message ,vidValue);
+        }, 400);
+        this.showMessage(this.message ,this.eventId);
+      } else {
+        this.isLoading = false;
+        this.showErrorPopup(response.body["errors"]);
+      }
+    },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
+  showMessage(message: string,eventId:string) {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '550px',
+      data: {
+        case: 'MESSAGE',
+        title: this.popupMessages.genericmessage.successLabel,
+        eventId:eventId,
+        message: message,
+        trackStatusText: this.popupMessages.genericmessage.trackStatusText,
+        dearResident: this.popupMessages.genericmessage.dearResident,
+        clickHere:this.popupMessages.genericmessage.clickHere,
+        btnTxt: this.popupMessages.genericmessage.successButton,
+        isOk:'OK'
+      }
+    });
+    return dialogRef;
+  }
+
+  successMsgForDownload(message: string,eventId:string) {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '550px',
+      data: {
+        case: 'MESSAGE',
+        title: this.popupMessages.genericmessage.successLabel,
+        eventId:eventId,
+        passwordCombinationHeading:this.popupMessages.genericmessage.passwordCombinationHeading,
+        passwordCombination:this.popupMessages.genericmessage.passwordCombination,
+        dearResident: this.popupMessages.genericmessage.dearResident,
+        message: message,
+        downloadedSuccessFully2: this.popupMessages.genericmessage.manageMyVidMessages.downloadedSuccessFully2,
+        trackStatusText:this.popupMessages.genericmessage.trackStatusText,
+        clickHere:this.popupMessages.genericmessage.clickHere,
+        btnTxt: this.popupMessages.genericmessage.successButton,
+        isOk:'OK'
+      }
+    });
+    return dialogRef;
+  }
+
+  showDeleteMessage(vidType: string) {
+    this.message = this.popupMessages.genericmessage.manageMyVidMessages[vidType].confirmationMessageForDeleteVid
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '550px',
+      data: {
+        case: 'MESSAGE',
+        title: this.popupMessages.genericmessage.warningLabel,
+        btnTxtNo: this.popupMessages.genericmessage.noButton,
+        isNo:"No",
+        message: this.message,
+        btnTxt: this.popupMessages.genericmessage.deleteButton,
+        isDelete:"Delete"
+      }
+    });
+    return dialogRef;
+  }
+
+  showDownloadMessage(vidType: string) {
+    this.message = this.popupMessages.genericmessage.manageMyVidMessages[vidType].confirmationMessageForDownloadVid 
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '550px',
+      data: {
+        case: 'MESSAGE',
+        title: this.popupMessages.genericmessage.warningLabel,
+        btnTxtNo: this.popupMessages.genericmessage.noButton,
+        isNo:"No",
+        message: this.message,
+        btnTxt: this.popupMessages.genericmessage.downloadLabel,
+        isDownload:"Download"
+      }
+    });
+    return dialogRef;
+  }
+  
+
+
+  showWarningMessage(vidType: any) {
+    if (vidType === "Perpetual") {
+      if (this.finalTypeList["Perpetual"].length) {
+        this.message = this.popupMessages.genericmessage.manageMyVidMessages[vidType].WarningMessageLabel
+      } else {
+        this.message = this.popupMessages.genericmessage.manageMyVidMessages[vidType].confirmationMessageForCreateVid
+      }
+    }else{
+      this.message = this.popupMessages.genericmessage.manageMyVidMessages[vidType].confirmationMessageForCreateVid
+    }
+
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '550px',
+      data: {
+        case: 'MESSAGE',
+        title: this.popupMessages.genericmessage.warningLabel,
+        message: this.message,
+        clickYesToProceed: this.popupMessages.genericmessage.clickYesToProceed,
+        yesBtnFor:"Vid",
+        btnTxt: this.popupMessages.genericmessage.yesButton,
+        isYes:'Yes',
+        btnTxtNo: this.popupMessages.genericmessage.noButton,
+        isNo:"No"
+      }
+    });
+    return dialogRef;
+  }
+
+  showErrorPopup(message: string) {
+    this.errorCode = message[0]['errorCode']
+    setTimeout(() => {
+      this.message = this.popupMessages.serverErrors[this.errorCode];
+      this.dialog
+      .open(DialogComponent, {
+        width: '650px',
+        data: {
+          case: 'MESSAGE',
+          title: this.popupMessages.genericmessage.errorLabel,
+          message: this.message,
+          btnTxt: this.popupMessages.genericmessage.successButton,
+          isOk:'OK'
+        },
+        disableClose: true
+      });
+  },400)
+  }
+
+  onToggle(event: any) {
+    this.selectedValue = event.source.value;
+  }
+
+  get fontSize(): any {
+    document.documentElement.style.setProperty('--fs', this.fontSizeService.fontSize.breadcrumb)
+    return this.fontSizeService.fontSize;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+    this.clickEventSubscription.unsubscribe()
+  }
+
+  onItemSelected(item: any) {
+    this.router.navigate([item]);
+  }
+
+}

@@ -1,0 +1,6 @@
+# Packetmanager
+
+## Install
+```
+$ ./install.sh
+```

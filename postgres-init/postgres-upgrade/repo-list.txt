@@ -1,0 +1,12 @@
+mosip-compliance-toolkit
+esignet
+commons
+id-authentication
+keymanager
+audit-manager
+admin-services
+id-repository
+partner-management-services
+pre-registration
+registration
+resident-services

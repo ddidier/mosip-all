@@ -1,0 +1,7 @@
+<svg id="lock_black" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <g id="Group_97" data-name="Group 97">
+    <path id="Path_2019" data-name="Path 2019" d="M0,0H32V32H0Z" fill="none"/>
+    <path id="Path_2020" data-name="Path 2020" d="M0,0H32V32H0Z" fill="none" opacity="0.87"/>
+  </g>
+  <path id="Path_2021" data-name="Path 2021" d="M22.643,10.33H21.311V7.664a6.658,6.658,0,1,0-13.316,0V10.33H6.663A2.672,2.672,0,0,0,4,13V26.324A2.672,2.672,0,0,0,6.663,28.99h15.98a2.672,2.672,0,0,0,2.663-2.666V13A2.672,2.672,0,0,0,22.643,10.33ZM10.658,7.664a3.995,3.995,0,1,1,7.99,0V10.33h-7.99Zm11.985,18.66H6.663V13h15.98Zm-7.99-4A2.666,2.666,0,1,0,11.99,19.66,2.672,2.672,0,0,0,14.653,22.326Z" transform="translate(1.347 0.337)" fill="#464a8c"/>
+</svg>

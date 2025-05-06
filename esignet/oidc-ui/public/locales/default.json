@@ -1,0 +1,11 @@
+{
+  "languages_2Letters": {
+    "en": "English",
+    "ar": "عربى"
+  },
+  "rtlLanguages": ["ar"],
+  "langCodeMapping": {
+    "eng": "en",
+    "ara": "ar"
+  }
+}

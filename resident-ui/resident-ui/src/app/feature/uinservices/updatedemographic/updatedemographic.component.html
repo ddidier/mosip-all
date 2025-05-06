@@ -1,0 +1,1160 @@
+
+<span class="breadcrumb breadcrumb-two" [style.font-size]="fontSize.breadcrumb">
+  <a (click)="onItemSelected('uinservices/dashboard')">{{'dashboard.uinservices' | translate}} &nbsp;&nbsp;</a> >
+  &nbsp;&nbsp;<span style="cursor: pointer;"
+    (click)="onItemSelected('uinservices/updatedemographic')">{{'updatedemographic.title' | translate}}</span>
+  <span [ngClass]="!showPreviewPage ? 'active' : 'demographic'" (click)="onItemSelected('matTabLabel')">&nbsp;&nbsp; >
+    &nbsp;&nbsp;
+    {{matTabLabel}}</span>
+  &nbsp;&nbsp;<span *ngIf="showPreviewPage" class="active">&nbsp;&nbsp; > &nbsp;&nbsp; {{'updatedemographic.preview' |
+    translate}}</span>
+</span>
+<div class="spinner" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="!isLoading && langJson" class="main-contianer">
+  <mat-card *ngIf="userInfo && !showPreviewPage && (buildJSONData | json) != '{}'" [ngStyle]="{'padding-bottom' : (keyboardService.isOpened) ? '200px' : ''}">
+    <h1 [style.font-size]="fontSize.heading" style="font-weight: 600;color: #505050;">{{langJson.title}}</h1>
+    <mat-tab-group animationDuration="0ms" [selectedIndex]="matTabIndex" (selectedTabChange)="logChange($event)">
+      <mat-tab class="mat-tab-local" label="{{'updatedemographic.identity' | translate}}">
+        <h3 [style.font-size]="fontSize.headingForUIN" class="tab-headings">{{'updatedemographic.identityHeading' | translate}}</h3>
+        <table class="each-tab-group-main-table" id="identityTab">
+          <tr class="table-main-card">
+            <td class="main-table-data">
+              <div *ngFor="let field of schema['identity']; let idx = index" class="mat-form1">
+                <div layout="row" *ngIf="field.tabgroup === 'identity'">
+                  <table width="100%">
+                    <tr *ngIf="field.controlType === 'calendar'">
+                      <td width="100%" class="main-table-data" *ngIf="userInfo[field.attributeName]">
+                        <table width="100%">
+                          <!-- number of attems mobile and tab code -->
+                          <tr class="number-of-attems-mobile-card" *ngIf="attributeUpdateCountMaxLimit[field.attributeName]">
+                            <td>
+                              <div [style.font-size]="fontSize.lableText"
+                                [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-left-card' : 'number-of-attems-left-card'">
+                                <div *ngIf="langJson && attributeUpdateCountMaxLimit">
+                                  <span
+                                    style="display: block; font-weight: 600;">{{langJson.remainingAttems.replace("$remainingAttems",
+                                    attributeUpdateCountRemainLimit[field.attributeName])}}</span>
+                                  <span [style.font-size]="fontSize.lableText" style="display: block;">{{langJson.maxAttems.replace("$MaxAttems",
+                                    attributeUpdateCountMaxLimit[field.attributeName]).replace("$Name",langJson[field.attributeName])}}</span>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          <!-- number of attems mobile and tab code -->
+                          <tr>
+                            <td class="width-of-input">
+                              <label style="margin: 0 5px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][0]}}</label>
+                            </td>
+                            <td width="3%" class="ele-for-lap-tab-card"></td>
+                            <td class="width-of-input ele-for-lap-tab-card">
+                              <label style="margin: 0 5px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}</label>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="width-of-input"><input [style.font-size]="fontSize.paragraph" type="text" class="readonly" readonly="true"
+                                disabled="true" [value]="buildJSONData[field.attributeName].value | date:'dd/MMM/yyyy'">
+                            </td>
+                            <td width="3%" class="ele-for-lap-tab-card"></td>
+                            <td class="width-of-input ele-for-lap-tab-card">
+                              <div class="date-input-card" *ngIf="langJson">
+                                <input [style.font-size]="fontSize.paragraph" [disabled]="attributeUpdateCountRemainLimit[field.attributeName] === 0"
+                                  [max]="maxdate" style=" border: none;" matInput
+                                  [placeholder]="langJson.calendarPlaceHolder" [matDatepicker]="picker" readonly
+                                  id="{{field.attributeName}}"
+                                  (dateChange)="captureDatePickerValue($event, field.attributeName, buildJSONData[field.attributeName].value)"
+                                  [(ngModel)]="selectedDate" (click)="isUpdatedataInProgress(picker, 'datePickerField')"/>
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker (opened)="isUpdatedataInProgress(picker, 'datePickerField')"  #picker></mat-datepicker>
+                              </div>
+                              <p class="warning-message"
+                                *ngIf="userInputValues[field.attributeName] === buildJSONData[field.attributeName]">
+                                {{langJson.sameDobInputErrorMsg}}</p>
+                            </td>
+                            <td width="1%" class="ele-for-lap-tab-card"></td>
+                            <td *ngIf="attributeUpdateCountRemainLimit" class="number-of-attems-main-card">
+                              <div *ngIf="attributeUpdateCountMaxLimit[field.attributeName]"
+                                [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-left-card' : 'number-of-attems-left-card'">
+                                <div *ngIf="langCode !== 'ara'"
+                                  [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-arrow-shape':'number-of-attems-arrow-shape'">
+                                </div>
+                                <div *ngIf="langCode === 'ara'" style="float: right;">
+                                  <div
+                                    [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-ara-number-of-attems-arrow-shape':'ara-number-of-attems-arrow-shape'">
+                                  </div>
+                                </div>
+                                <div [style.font-size]="fontSize.lableText" style="padding: 4px;" *ngIf="langJson && attributeUpdateCountMaxLimit"
+                                  [ngClass]="langCode === 'ara' ? 'dir-rtl' :'dir-ltl'">
+                                  <span 
+                                    style="display: block; font-weight: 600;">{{langJson.remainingAttems.replace("$remainingAttems",
+                                    attributeUpdateCountRemainLimit[field.attributeName])}}</span>
+                                  <span style="display: block;">{{langJson.maxAttems.replace("$MaxAttems",
+                                    attributeUpdateCountMaxLimit[field.attributeName]).replace("$Name",langJson[field.attributeName])}}</span>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr *ngIf="isSameData[field.attributeName]" class="ele-for-lap-tab-card">
+                            <td></td>
+                            <td></td>
+                            <td>
+                              <span class="warning-message">
+                                {{langJson.sameNameInputErrorMsg.replace("$NAME",langJson[field.attributeName]).replace("$NAME",langJson[field.attributeName])}}</span>
+                            </td>
+                          </tr>
+                          <!-- input field for mobile view -->
+                          <tr>
+                            <td class="ele-for-mob-card"><span style="margin: 0 5px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="sub-table-row ele-for-mob-card">
+                              <div class="date-input-card" *ngIf="langJson">
+                                <input [style.font-size]="fontSize.paragraph" [disabled]="attributeUpdateCountRemainLimit[field.attributeName] === 0"
+                                  [max]="maxdate" style=" border: none;" matInput
+                                  [placeholder]="langJson.calendarPlaceHolder" [matDatepicker]="picker" readonly
+                                  id="{{field.attributeName}}"
+                                  (dateChange)="captureDatePickerValue($event, field.attributeName, buildJSONData[field.attributeName])"
+                                  [(ngModel)]="selectedDate" (click)="isUpdatedataInProgress(picker, 'datePickerField')" />
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker (opened)="isUpdatedataInProgress(picker, 'datePickerField')" #picker></mat-datepicker>
+                              </div>
+                              <p class="warning-message"
+                                *ngIf="userInputValues[field.attributeName] === buildJSONData[field.attributeName]">
+                                {{langJson.sameDobInputErrorMsg}}</p>
+                            </td>
+                          </tr>
+                          <tr *ngIf="isSameData[field.attributeName]" class="ele-for-mob-card">
+                            <td>
+                              <span class="warning-message">
+                                {{langJson.sameNameInputErrorMsg.replace("$NAME",langJson[field.attributeName]).replace("$NAME",langJson[field.attributeName])}}</span>
+                            </td>
+                          </tr>
+                          <!-- input field for mobile view -->
+                        </table>
+                      </td>
+                    </tr>
+                    <tr *ngIf="field.controlType === 'textbox'">
+                      <td class="main-table-data" width="100%" *ngIf="userInfo[field.attributeName]">
+                        <table width="100%" *ngFor="let language of supportedLanguages;">
+                          <!-- number of attems mobile and tab code -->
+                          <tr class="number-of-attems-mobile-card" *ngIf="attributeUpdateCountRemainLimit">
+                            <td *ngIf="attributeUpdateCountMaxLimit[field.attributeName]">
+                              <div
+                                [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-left-card' : 'number-of-attems-left-card'">
+                                <div [style.font-size]="fontSize.lableText">
+                                  <span
+                                    style="display: block; font-weight: 600;">{{langJson.remainingAttems.replace("$remainingAttems",attributeUpdateCountRemainLimit[field.attributeName])}}</span>
+                                  <span *ngIf="attributeUpdateCountMaxLimit"
+                                    style="display: block;">{{langJson.maxAttems.replace("$MaxAttems",
+                                    attributeUpdateCountMaxLimit[field.attributeName]).replace("$Name",langJson[field.attributeName])}}</span>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          <!-- number of attems mobile and tab code -->
+                          <tr>
+                            <td class="width-of-input">
+                              <div style="margin: 0 3px 0 2px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                {{field.labelName[eachLang][0]}}
+                                <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
+                              </p></div>
+                            </td>
+                            <td width="3%" class="ele-for-lap-tab-card"></td>
+                            <td class="width-of-input ele-for-lap-tab-card">
+                              <div style="margin: 0 3px 0 -2px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                {{field.labelName[eachLang][1]}}
+                                <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
+                              </p></div> 
+                            </td>
+                          </tr>
+                          <tr *ngFor="let item of buildJSONData[field.attributeName], let i = index">
+                            <td class="sub-table-row" class="width-of-input" class="each-input-data"
+                              [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'">
+                              <input [style.font-size]="fontSize.paragraph" type="text" class="readonly" readonly="true" disabled="true" [value]="item.value">
+                            </td>
+                            <td class="sub-table-row ele-for-lap-tab-card" width="3%"></td>
+                            <td class="sub-table-row ele-for-lap-tab-card">
+                              <div class="search-input-card" [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'">
+                                <input [style.font-size]="fontSize.paragraph" class="input" matInput #{{field.attributeName}}
+                                  id="{{field.attributeName}}{{item.language}}"
+                                  (blur)="captureValue($event, field.attributeName, item.language, item.value)"
+                                  placeholder="{{field.placeHolder[item.language]}}"
+                                  [value]="userInputValues[field.attributeName][item.language]"
+                                  (focus)="captureVirtualKeyboard(field.attributeName + item.language, item.index)"
+                                  (click)="isUpdatedataInProgress($event, 'textField')"
+                                  [disabled]="attributeUpdateCountRemainLimit[field.attributeName] === 0"
+                                  #keyboardRef />
+                                <em *ngIf="attributeUpdateCountRemainLimit[field.attributeName] !== 0" matSuffix class="material-icons mat-keyboard-icon"
+                                  (click)="openKeyboard(field.attributeName+item.language, item.language)">keyboard</em>
+                              </div>
+
+                            </td>
+                            <td class="sub-table-row ele-for-lap-tab-card" width="1%"></td>
+                            <td *ngIf="i===0 && attributeUpdateCountRemainLimit" class="number-of-attems-main-card">
+                              <div *ngIf="attributeUpdateCountMaxLimit[field.attributeName]"
+                                [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-left-card' : 'number-of-attems-left-card'">
+                                <div *ngIf="langCode !== 'ara'"
+                                  [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-arrow-shape':'number-of-attems-arrow-shape'">
+                                </div>
+                                <div *ngIf="langCode === 'ara'" style="float: right;">
+                                  <div
+                                    [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-ara-number-of-attems-arrow-shape':'ara-number-of-attems-arrow-shape'">
+                                  </div>
+                                </div>
+                                <div style="padding: 4px;" *ngIf="langJson"
+                                  [ngClass]="langCode === 'ara' ? 'dir-rtl' :'dir-ltl'" [style.font-size]="fontSize.lableText">
+                                  <span
+                                    style="display: block; font-weight: 600;">{{langJson.remainingAttems.replace("$remainingAttems",attributeUpdateCountRemainLimit[field.attributeName])}}</span>
+                                  <span *ngIf="attributeUpdateCountMaxLimit"
+                                    style="display: block;">{{langJson.maxAttems.replace("$MaxAttems",
+                                    attributeUpdateCountMaxLimit[field.attributeName]).replace("$Name",langJson[field.attributeName])}}</span>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr *ngIf="isSameData[field.attributeName] || enteredOnlyNumbers" class="ele-for-lap-tab-card">
+                            <td></td>
+                            <td></td>
+                            <td>
+                              <span class="warning-message" *ngIf="isSameData[field.attributeName]">
+                                {{langJson.sameNameInputErrorMsg.replace("$NAME",langJson[field.attributeName]).replace("$NAME",langJson[field.attributeName])}}</span>
+                                <span class="warning-message" *ngIf="enteredOnlyNumbers">
+                                  {{langJson.enteredOnlyNums}}</span>
+                            </td>
+                          </tr>
+                          <!-- input field for mobile view -->
+                          <tr>
+                            <td class="ele-for-mob-card">
+                              <div style="margin: 0 3px 0 -2px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                {{field.labelName[eachLang][1]}}
+                                <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
+                              </p></div>
+                            </td>
+                          </tr>
+                          <tr *ngFor="let item of buildJSONData[field.attributeName]">
+                            <td class="sub-table-row ele-for-mob-card">
+                              <div class="search-input-card" [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'">
+                                <input [style.font-size]="fontSize.paragraph" class="input" matInput #{{field.attributeName}}
+                                  id="{{field.attributeName}}{{item.language}}Mobile"
+                                  (blur)="captureValue($event, field.attributeName, item.language, item.value)"
+                                  placeholder="{{field.placeHolder[item.language]}}"
+                                  [value]="userInputValues[field.attributeName][item.language]"
+                                  (focus)="captureVirtualKeyboard(field.attributeName + item.language+'Mobile', item.mobileIndex)"
+                                  (click)="isUpdatedataInProgress($event, 'textField')"
+                                  [disabled]="attributeUpdateCountRemainLimit[field.attributeName] === 0"
+                                  #keyboardRef />
+                                <em *ngIf="attributeUpdateCountRemainLimit[field.attributeName] !== 0" matSuffix class="material-icons mat-keyboard-icon"
+                                  (click)="openKeyboard(field.attributeName+item.language+'Mobile', item.language)">keyboard</em>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr *ngIf="isSameData[field.attributeName]" class="ele-for-mob-card">
+                            <td>
+                              <span class="warning-message">
+                                {{langJson.sameNameInputErrorMsg.replace("$NAME",langJson[field.attributeName]).replace("$NAME",langJson[field.attributeName])}}</span>
+                            </td>
+                          </tr>
+                          <!-- input field for mobile view -->
+                        </table>
+                      </td>
+                    </tr>
+                    <tr *ngIf="field.controlType === 'dropdown'">
+                      <td class="main-table-data" width="100%" *ngIf="userInfo[field.attributeName]">
+                        <table width="100%">
+                          <!-- number of attems mobile and tab code -->
+                          <tr class="number-of-attems-mobile-card" *ngIf="attributeUpdateCountRemainLimit">
+                            <td *ngIf="attributeUpdateCountMaxLimit[field.attributeName]">
+                              <div
+                                [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-left-card' : 'number-of-attems-left-card'">
+                                <div [style.font-size]="fontSize.lableText" style="padding-right: 4px;" *ngIf="langJson && attributeUpdateCountMaxLimit">
+                                  <span
+                                    style="display: block; font-weight: 600;">{{langJson.remainingAttems.replace("$remainingAttems",
+                                    attributeUpdateCountRemainLimit[field.attributeName])}}</span>
+                                  <span style="display: block;">{{langJson.maxAttems.replace("$MaxAttems",
+                                    attributeUpdateCountMaxLimit[field.attributeName]).replace("$Name",langJson[field.attributeName])}}</span>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          <!-- number of attems mobile and tab code -->
+                          <tr>
+                            <td class="width-of-input">
+                              <div style="margin: 0 2px 0 3px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                {{field.labelName[eachLang][0]}}
+                                <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
+                              </p></div>
+                            </td>
+                            <td width="3%" class="ele-for-lap-tab-card"></td>
+                            <td [style.font-size]="fontSize.paragraph" class="width-of-input ele-for-lap-tab-card">
+                              <div style="margin: 0 2px 0 3px;"><p style="display: inline;" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                {{field.labelName[eachLang][1]}}
+                                <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
+                              </p></div>
+                            </td>
+                          </tr>
+                          <tr *ngFor="let item of buildJSONData[field.attributeName], let i = index">
+                            <td class="sub-table-row width-of-input"
+                              [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'">
+                              <input [style.font-size]="fontSize.paragraph" type="text" class="readonly" readonly="true" disabled="true" [value]="item.value">
+                            </td>
+                            <td width="3%" class="sub-table-row ele-for-lap-tab-card"></td>
+                            <td class="sub-table-row width-of-input ele-for-lap-tab-card">
+                              <span [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'">
+                                <mat-select #mySelect [style.font-size]="fontSize.paragraph" disableOptionCentering class="enable-dropdown" id="{{field.attributeName}}"
+                                  placeholder="{{field.placeHolder[item.language]}}"
+                                  [(value)]="userInputValues[field.attributeName][item.language]"
+                                  [disabled]="attributeUpdateCountRemainLimit[field.attributeName] === 0"
+                                  (selectionChange)="captureDropDownValue($event, field.attributeName, item.language, item.value)"
+                                  (click)="isUpdatedataInProgress(mySelect, 'dropDownField')"
+                                  >
+                                  <mat-option *ngFor="let data of dropDownValues[field.attributeName][item.language]"
+                                    [value]="data.code">{{ data.value }}</mat-option>
+                                </mat-select>
+                              </span>
+                              <span
+                                *ngIf="userInputValues[field.attributeName] && i === (buildJSONData[field.attributeName]?.length -1)">
+                                <p [style.font-size]="fontSize.warningMessages" class="warning-message"
+                                  *ngIf="userInputValues[field.attributeName] === buildJSONData[field.attributeName][langCode]">
+                                  {{langJson.sameGenderInputErrorMsg}}</p>
+                              </span>
+                            </td>
+                            <td class="sub-table-row ele-for-lap-tab-card" width="1%"></td>
+                            <td *ngIf="i===0 && attributeUpdateCountRemainLimit" class="number-of-attems-main-card">
+                              <div *ngIf="attributeUpdateCountMaxLimit[field.attributeName]"
+                                [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-left-card' : 'number-of-attems-left-card'">
+                                <div *ngIf="langCode !== 'ara'"
+                                  [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-arrow-shape':'number-of-attems-arrow-shape'">
+                                </div>
+                                <div *ngIf="langCode === 'ara'" style="float: right;">
+                                  <div
+                                    [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-ara-number-of-attems-arrow-shape':'ara-number-of-attems-arrow-shape'">
+                                  </div>
+                                </div>
+                                <div [style.font-size]="fontSize.lableText" style="padding: 4px;" *ngIf="langJson && attributeUpdateCountMaxLimit"
+                                  [ngClass]="langCode === 'ara' ? 'dir-rtl' :'dir-ltl'">
+                                  <span
+                                    style="display: block; font-weight: 600;">{{langJson.remainingAttems.replace("$remainingAttems",
+                                    attributeUpdateCountRemainLimit[field.attributeName])}}</span>
+                                  <span style="display: block;">{{langJson.maxAttems.replace("$MaxAttems",
+                                    attributeUpdateCountMaxLimit[field.attributeName]).replace("$Name",langJson[field.attributeName])}}</span>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr *ngIf="isSameData[field.attributeName]" class="ele-for-lap-tab-card">
+                            <td></td>
+                            <td></td>
+                            <td>
+                              <span [style.font-size]="fontSize.warningMessages" class="warning-message">
+                                {{langJson.sameNameInputErrorMsg.replace("$NAME",langJson[field.attributeName]).replace("$NAME",langJson[field.attributeName])}}</span>
+                            </td>
+                          </tr>
+                          <!-- input field for mobile view -->
+                          <tr>
+                            <td class="ele-for-mob-card">
+                              <div style="margin: 0 2px 0 3px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                {{field.labelName[eachLang][1]}}
+                                <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
+                              </p></div>
+                            </td>
+                          </tr>
+                          <tr *ngFor="let item of buildJSONData[field.attributeName]">
+                            <td class="sub-table-row ele-for-mob-card">
+                              <span [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'">
+                                <mat-select #mySelect [style.font-size]="fontSize.paragraph" disableOptionCentering class="enable-dropdown" id="{{field.attributeName}}"
+                                  placeholder="{{field.placeHolder[item.language]}}"
+                                  [(value)]="userInputValues[field.attributeName][item.language]"
+                                  [disabled]="attributeUpdateCountRemainLimit[field.attributeName] === 0"
+                                  (selectionChange)="captureDropDownValue($event, field.attributeName, item.language,item.value)"
+                                  (click)="isUpdatedataInProgress(mySelect, 'dropDownField')">
+                                  <mat-option *ngFor="let data of dropDownValues[field.attributeName][item.language]"
+                                    [value]="data.code">{{ data.value }}</mat-option>
+                                </mat-select>
+                              </span>
+                              <span
+                                *ngIf="userInputValues[field.attributeName] && i === (buildJSONData[field.attributeName]?.length -1)">
+                                <p class="warning-message"
+                                  *ngIf="userInputValues[field.attributeName] === buildJSONData[field.attributeName][langCode]">
+                                  {{langJson.sameGenderInputErrorMsg}}</p>
+                              </span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="isSameData[field.attributeName]" class="ele-for-mob-card">
+                            <td>
+                              <span class="warning-message">
+                                {{langJson.sameNameInputErrorMsg.replace("$NAME",langJson[field.attributeName]).replace("$NAME",langJson[field.attributeName])}}</span>
+                            </td>
+                          </tr>
+                          <!-- input field for mobile view -->
+                        </table>
+                      </td>
+                    </tr>
+                    <tr *ngIf="field.controlType === 'fileupload'">
+                      <td class="main-table-data">
+                        <table class="file-Upload-card">
+                          <tr>
+                            <td width="100%" colspan="3"><label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][0]}}</label></td>
+                          </tr>
+                          <tr>
+                            <td class="width-of-input"><label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}<span
+                                  style="color: red;">*</span></label></td>
+                            <td width="3%"></td>
+                            <td class="width-of-input"><label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][2]}}</label></td>
+                          </tr>
+                          <tr>
+                            <td class="width-of-input">
+                              <mat-select [style.font-size]="fontSize.paragraph" disableOptionCentering class="enable-dropdown"
+                                placeholder="{{langJson.docTypePlaceholder}}"
+                                [value]="proofOfIdentity['documenttype'] ? proofOfIdentity['documenttype'] : '' "
+                                id="{{field.attributeName}}"
+                                (selectionChange)="captureDropDownValue($event, field.attributeName, supportedLanguages[0], '')">
+                                <mat-option class="multiline-mat-option"
+                                  *ngFor="let data of dropDownValues[field.attributeName]" [value]="data.code">{{
+                                  data.name }}</mat-option>
+                              </mat-select>
+                            </td>
+                            <td width="3%"></td>
+                            <td class="width-of-input">
+                              <div class="search-input-card">
+                                <input [style.font-size]="fontSize.paragraph" class="input"
+                                  [value]="proofOfIdentity['documentreferenceId'] ? proofOfIdentity['documentreferenceId'] : '' "
+                                  matInput #{{field.attributeName}} id="{{field.attributeName}}value"
+                                  placeholder="{{langJson.DocIDPlaceholder}}"
+                                  (blur)="captureValue($event, field.attributeName, '', '')"
+                                  (focus)="captureVirtualKeyboard(field.attributeName + 'value', buildJSONData.proofOfIdentity)"
+                                  #keyboardRef />
+                                <em matSuffix class="material-icons mat-keyboard-icon"
+                                  (click)="openKeyboard(field.attributeName +'value')">keyboard</em>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr *ngIf="displayPOIUpload">
+                            <td width="100%" colspan="3"><label [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][3]}}<span
+                                  style="color: red;">*</span></label></td>
+                          </tr>
+                          <tr *ngIf="displayPOIUpload">
+                            <td width="100%" colspan="3">
+                              <div class="container" appDnd (fileDropped)="onFileDropped($event, 'POI')">
+                                <input (click)="$event.target.value=null"
+                                  [disabled]="proofOfIdentity.documenttype === undefined" type="file" #fileDropRef
+                                  id="fileDropRef" (change)="fileBrowseHandler($event.target.files, 'POI')"
+                                  accept=".pdf, .jpg, .jpeg, .png" />
+                                <label style="margin-right: 1rem;display: flex;" for="fileDropRef">
+                                  <svg id="upload_icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24.042"
+                                    viewBox="0 0 24 24.042">
+                                    <g id="Group_13" data-name="Group 13" transform="translate(3 2.504)">
+                                      <path id="Path_988" data-name="Path 988"
+                                        d="M13,11.337l2.59,2.585L17,12.509,12,7.5,7,12.509l1.41,1.412L11,11.337v9.687h2Z"
+                                        transform="translate(-3 -7.5)" fill="#03a64a" />
+                                      <path id="Path_2004" data-name="Path 2004"
+                                        d="M19,3v7.012H5V3H3v7.012a2.008,2.008,0,0,0,2,2H19a2.008,2.008,0,0,0,2-2V3Z"
+                                        transform="translate(-3 6.517)" fill="#03a64a" />
+                                    </g>
+                                    <path id="Path_989" data-name="Path 989" d="M0,24.042H24V0H0Z" fill="none" />
+                                  </svg>
+                                  <span [style.font-size]="fontSize.lableText" 
+                                    style="margin-top: 4px;padding-left: 5px; font-weight: 600;">{{langJson.uploadImage}}</span>
+                                </label>
+                                <h3 style="margin-right: 8px;" [style.font-size]="fontSize.lableText">{{langJson.or}}</h3>
+                                &nbsp;
+                                <h3 [style.font-size]="fontSize.lableText">{{langJson.dropImage}}</h3>
+                              </div>
+                              <p [style.font-size]="fontSize.warningMessages"  *ngIf="isValidFileFormatPOI" class="warning-message">{{warningMessage}}</p>
+                            </td>
+                          </tr>
+                          <tr *ngIf="displayPOIUpload">
+                            <td width="100%" colspan="3">
+                              <label [style.font-size]="fontSize.paragraph" style="display: block;">{{field.labelName[langCode][4]}}</label>
+                              <label [style.font-size]="fontSize.paragraph" >{{field.labelName[langCode][5]}}</label>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td width="100%" colspan="3">
+                              <div class="files-list">
+                                <div class="single-file" *ngFor="let file of files; let i = index">
+                                  <div class="file-icon" style="width: 50px">
+                                    <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                                      xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 58"
+                                      style="enable-background:new 0 0 58 58;" xml:space="preserve">
+                                      <polygon style="fill:#EDEADA;" points="51.5,14 37.5,0 6.5,0 6.5,58 51.5,58 " />
+                                      <g>
+                                        <path style="fill:#CEC9AE;"
+                                          d="M16.5,23h25c0.552,0,1-0.447,1-1s-0.448-1-1-1h-25c-0.552,0-1,0.447-1,1S15.948,23,16.5,23z" />
+                                        <path style="fill:#CEC9AE;"
+                                          d="M16.5,15h10c0.552,0,1-0.447,1-1s-0.448-1-1-1h-10c-0.552,0-1,0.447-1,1S15.948,15,16.5,15z" />
+                                        <path style="fill:#CEC9AE;"
+                                          d="M41.5,29h-25c-0.552,0-1,0.447-1,1s0.448,1,1,1h25c0.552,0,1-0.447,1-1S42.052,29,41.5,29z" />
+                                        <path style="fill:#CEC9AE;"
+                                          d="M41.5,37h-25c-0.552,0-1,0.447-1,1s0.448,1,1,1h25c0.552,0,1-0.447,1-1S42.052,37,41.5,37z" />
+                                        <path style="fill:#CEC9AE;"
+                                          d="M41.5,45h-25c-0.552,0-1,0.447-1,1s0.448,1,1,1h25c0.552,0,1-0.447,1-1S42.052,45,41.5,45z" />
+                                      </g>
+                                      <polygon style="fill:#CEC9AE;" points="37.5,0 37.5,14 51.5,14 " />
+                                    </svg>
+                                  </div>
+                                  <div [style.font-size]="fontSize.lableText" class="info">
+                                    <h4 class="name">
+                                    </h4>
+                                    <p class="size">
+                                      {{ formatBytes(file?.size) }}
+                                    </p>
+                                    {{file?.name}}
+                                    <app-progress [progress]="file?.progress"></app-progress>
+                                  </div>
+
+                                  <div class="preview">
+                                    <img (click)="previewFile(i, 'POI', file.name)" mat-card-xs-image
+                                      style="margin: 0 0 -5px 0;" src='./assets/icons/iconfont/visibility_on.svg'
+                                      alt="" />
+                                  </div>
+
+                                  <div class="delete" (click)="deleteFile(i, 'POI')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+                                      <path fill="#B1B1B1" fill-rule="nonzero"
+                                        d="M1 16c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v10zm3.17-7.83a.996.996 0 0 1 1.41 0L7 9.59l1.42-1.42a.996.996 0 1 1 1.41 1.41L8.41 11l1.42 1.42a.996.996 0 1 1-1.41 1.41L7 12.41l-1.42 1.42a.996.996 0 1 1-1.41-1.41L5.59 11 4.17 9.58a.996.996 0 0 1 0-1.41zM10.5 1L9.79.29C9.61.11 9.35 0 9.09 0H4.91c-.26 0-.52.11-.7.29L3.5 1H1c-.55 0-1 .45-1 1s.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1h-2.5z" />
+                                    </svg>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <div class="submit-btn-card">
+          <button [style.font-size]="fontSize.subHeading" [disabled]="previewDisabled || enteredOnlyNumbers" (click)="previewBtn('identity')" mat-raised-button color="primary"
+            id="previewBtn">{{langJson.preview}}</button>
+        </div>
+      </mat-tab>
+      <mat-tab label="{{'updatedemographic.address' | translate}}">
+        <h3 [style.font-size]="fontSize.headingForUIN" class="tab-headings">{{'updatedemographic.addressHeading' | translate}}</h3>
+        <div class="address-page">
+          <table class="file-Upload-card" id="addressTab">
+            <tr class="table-main-card">
+              <td>
+                <div *ngFor="let field of schema['identity']; let i = index" class="mat-form1">
+                  <div layout="row" *ngIf="field.tabgroup === 'address'">
+                    <table width="100%">
+                      <tr *ngIf="field.controlType === 'textbox'">
+                        <td class="main-table-data" width="100%" *ngIf="userInfo[field.attributeName]">
+                          <table width="100%">
+                            <tr>
+                              <td class="width-of-input" >
+                                <div style="margin: 0 2px 0 3px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                  {{field.labelName[eachLang][0]}}
+                                  <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
+                                </p></div>
+                              </td>
+                              <td width="3%" class="ele-for-lap-tab-card"></td>
+                              <td class="width-of-input ele-for-lap-tab-card">
+                                <div style="margin: 0 2px 0 3px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                  {{field.labelName[eachLang][1]}}
+                                  <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
+                                </p></div>
+                              </td>
+                            </tr>
+                            <tr *ngFor="let item of buildJSONData[field.attributeName] let i = index"
+                              [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'">
+                              <td class="sub-table-row" class="width-of-input">
+                                <input [style.font-size]="fontSize.paragraph" *ngIf="buildJSONData[field.attributeName]" type="text" class="readonly"
+                                  readonly="true" disabled="true" [value]="item.value">
+                              </td>
+                              <td class="sub-table-row ele-for-lap-tab-card" width="3%"></td>
+                              <td class="sub-table-row width-of-input ele-for-lap-tab-card">
+                                <div class="search-input-card">
+                                  <input [style.font-size]="fontSize.paragraph" class="input" matInput #{{field.attributeName}}
+                                    id="{{field.attributeName}}{{item.language}}"
+                                    (blur)="captureAddressValue($event, field.attributeName, item.language, item.value)"
+                                    [(value)]="userInputValues[field.attributeName][item.language]"
+                                    [placeholder]="field.placeHolder[item.language]"
+                                    (click)="isUpdatedataInProgress($event, 'textField')"
+                                    (focus)="captureVirtualKeyboard(field.attributeName+item.language, item.index)"
+                                    #keyboardRef />
+                                  <em matSuffix class="material-icons mat-keyboard-icon"
+                                    (click)="openKeyboard(field.attributeName+item.language, item.language)">keyboard</em>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr *ngIf="isSameData[field.attributeName]" class="ele-for-lap-tab-card">
+                              <td></td>
+                              <td></td>
+                              <td>
+                                <span [style.font-size]="fontSize.warningMessages" class="warning-message">
+                                  {{langJson.sameNameInputErrorMsg.replace("$NAME",langJson[field.attributeName]).replace("$NAME",langJson[field.attributeName])}}</span>
+                              </td>
+                            </tr>
+                            <!-- input field for mobile view -->
+                            <tr class="ele-for-mob-card">
+                              <td class="width-of-input">
+                                <div style="margin: 0 2px 0 3px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                  {{field.labelName[eachLang][1]}}
+                                  <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
+                                </p></div>
+                              </td>
+                            </tr>
+                            <tr class="ele-for-mob-card" *ngFor="let item of buildJSONData[field.attributeName]">
+                              <td class="sub-table-row width-of-input">
+                                <div class="search-input-card">
+                                  <input [style.font-size]="fontSize.paragraph" class="input" matInput #{{field.attributeName}}
+                                    id="{{field.attributeName}}{{item.language}}Mobile"
+                                    (blur)="captureAddressValue($event, field.attributeName, item.language, item.value)"
+                                    [(value)]="userInputValues[field.attributeName][item.language]"
+                                    [placeholder]="field.placeHolder[item.language]"
+                                    (click)="isUpdatedataInProgress($event, 'textField')"
+                                    (focus)="captureVirtualKeyboard(field.attributeName+item.language+'Mobile', item.mobileIndex)"
+                                    #keyboardRef />
+                                  <em matSuffix class="material-icons mat-keyboard-icon"
+                                    (click)="openKeyboard(field.attributeName+item.language+'Mobile', item.language)">keyboard</em>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr *ngIf="isSameData[field.attributeName]" class="ele-for-mob-card">
+                              <td>
+                                <span [style.font-size]="fontSize.warningMessages" class="warning-message">
+                                  {{langJson.sameNameInputErrorMsg.replace("$NAME",langJson[field.attributeName]).replace("$NAME",langJson[field.attributeName])}}</span>
+                              </td>
+                            </tr>
+                            <!-- input field for mobile view -->
+                          </table>
+                        </td>
+                      </tr>
+                      <tr *ngIf="field.controlType === 'dropdown'">
+                        <td class="main-table-data" width="100%" *ngIf="userInfo[field.attributeName]">
+                          <table width="100%">
+                            <tr *ngIf="typeOf(userInfo[field.attributeName]) !== 'string'">
+                              <td class="width-of-input">
+                                <div style="margin: 0 2px 0 3px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                  {{field.labelName[eachLang][0]}}
+                                  <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
+                                </p></div>
+                              </td>
+                              <td width="3%" class="ele-for-lap-tab-card"></td>
+                              <td class="width-of-input ele-for-lap-tab-card">
+                                <div style="margin: 0 2px 0 3px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                  {{field.labelName[eachLang][1]}}
+                                  <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
+                                </p></div>
+                              </td>
+                            </tr>
+                            <tr *ngIf="typeOf(userInfo[field.attributeName]) === 'string'">
+                              <td class="width-of-input">
+                                <label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][0]}}</label>
+                              </td>
+
+                              <td width="3%" class="ele-for-lap-tab-card"></td>
+                              <td class="width-of-input ele-for-lap-tab-card">
+                                <label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}</label>
+                              </td>
+                            </tr>
+                            <ng-container *ngIf="typeOf(userInfo[field.attributeName]) !== 'string'">
+                              <tr *ngFor="let item of buildJSONData[field.attributeName], let i = index">
+                                <td class="sub-table-row each-Hierarchy-td width-of-input">
+                                  <input [style.font-size]="fontSize.paragraph" [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'"
+                                    *ngIf="buildJSONData[field.attributeName]" type="text" class="readonly"
+                                    readonly="true" disabled="true" [value]="item.value">
+                                </td>
+                                <td class="sub-table-row ele-for-lap-tab-card" width="3%"></td>
+                                <td class="sub-table-row each-Hierarchy-td width-of-input ele-for-lap-tab-card"
+                                  *ngIf="dynamicDropDown[field.attributeName]">
+                                  <span [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'">
+                                    <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
+                                      placeholder="{{field.placeHolder[item.language]}}"
+                                      [ngClass]="dynamicDropDown[field.attributeName]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
+                                      [(value)]="userInputValues[field.attributeName][item.language]"
+                                      id="{{field.name}}{{item.language}}"
+                                      (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
+                                      (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
+                                      <mat-option *ngFor="let data of dynamicDropDown[field.attributeName][item.language]"
+                                        [value]="data.code">
+                                        {{ data.name }}
+                                      </mat-option>
+                                    </mat-select>
+                                  </span>
+                                </td>
+                                <td class="sub-table-row each-Hierarchy-td width-of-input ele-for-lap-tab-card"
+                                  *ngIf="dynamicDropDown[field.name]">
+                                  <span [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'">
+                                    <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
+                                      placeholder="{{field.placeHolder[item.language]}}"
+                                      [ngClass]="dynamicDropDown[field.name]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
+                                      [(value)]="userInputValues[field.attributeName][item.language]"
+                                      id="{{field.name}}{{item.language}}"
+                                      (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
+                                      (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
+                                      <mat-option *ngFor="let data of dynamicDropDown[field.name][item.language]"
+                                        [value]="data.code">
+                                        {{ data.name }}
+                                      </mat-option>
+                                    </mat-select>
+                                  </span>
+                                </td>
+                              </tr>
+                            </ng-container>
+                            <tr *ngIf="typeOf(userInfo[field.attributeName]) === 'string'">
+                              <td *ngIf="buildJSONData[field.attributeName]" class="width-of-input">
+                                <input [style.font-size]="fontSize.paragraph" type="text" class="readonly" readonly="true" disabled="true"
+                                  [value]="buildJSONData[field.attributeName].value">
+                              </td>
+                              <td class="sub-table-row ele-for-lap-tab-card" width="3%"></td>
+                              <td class="sub-table-row each-Hierarchy-td width-of-input ele-for-lap-tab-card"
+                                *ngIf="dynamicDropDown[field.attributeName]">
+                                <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
+                                  placeholder="{{langJson.select}} {{field.labelName[langCode][1]}}"
+                                  [ngClass]="dynamicDropDown[field.attributeName]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
+                                  [(value)]="userInputValues[field.attributeName]" id="{{field.name}}"
+                                  (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
+                                  (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
+                                  <mat-option *ngFor="let data of dynamicDropDown[field.attributeName].eng" [value]="data.code">
+                                    {{ data.name }}
+                                  </mat-option>
+                                </mat-select>
+                              </td>
+                              <td class="sub-table-row each-Hierarchy-td width-of-input ele-for-lap-tab-card"
+                                *ngIf="dynamicDropDown[field.name]">
+                                <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
+                                  placeholder="{{langJson.select}} {{field.labelName[langCode][1]}}"
+                                  [ngClass]="dynamicDropDown[field.name]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
+                                  [(value)]="userInputValues[field.attributeName]" id="{{field.name}}"
+                                  (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
+                                  (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
+                                  <mat-option *ngFor="let data of dynamicDropDown[field.name].eng" [value]="data.code">
+                                    {{ data.name }}
+                                  </mat-option>
+                                </mat-select>
+                              </td>
+                            </tr>
+                            <tr class="ele-for-lap-tab-card">
+                              <td></td>
+                              <td></td>
+                              <td>
+                                <span *ngIf="locationFieldNameList?.length">
+                                  <p [style.font-size]="fontSize.warningMessages" *ngIf="locationFieldNameList[field.locationHierarchyLevel-1] === fieldName && field.locationHierarchyLevel > 1"
+                                    class="warning-message">{{langJson.EnterAllAddress}} {{field.placeHolder[langCode]}}
+                                  </p>
+                                </span>
+                              </td>
+                            </tr>
+
+                            <!-- input field for mobile view -->
+                            <tr class="ele-for-mob-card">
+                              <td class="width-of-input" *ngIf="typeOf(userInfo[field.attributeName]) !== 'string'">
+                                <div style="margin: 0 2px 0 3px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                  {{field.labelName[eachLang][1]}}
+                                  <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
+                                </p></div>
+                              </td>
+                              <td class="width-of-input" *ngIf="typeOf(userInfo[field.attributeName]) === 'string'">
+                                <label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}</label>
+                              </td>
+                            </tr>
+                            <tr *ngIf="typeOf(userInfo[field.attributeName]) !== 'string'">
+                              <td class="ele-for-mob-card"
+                                *ngFor="let item of buildJSONData[field.attributeName], let i = index">
+                                <span class="sub-table-row each-Hierarchy-td">
+                                  <span [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'" *ngIf="dynamicDropDown[field.name]">
+                                    <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
+                                      placeholder="{{field.placeHolder[item.language]}}"
+                                      [ngClass]="dynamicDropDown[field.name]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
+                                      [(value)]="userInputValues[field.attributeName][item.language]"
+                                      id="{{field.name}}{{item.language}}"
+                                      (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
+                                      (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
+                                      <mat-option *ngFor="let data of dynamicDropDown[field.name][item.language]"
+                                        [value]="data.code">
+                                        {{ data.name }}
+                                      </mat-option>
+                                    </mat-select>
+                                  </span>
+                                  <span [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'" *ngIf="dynamicDropDown[field.attributeName]">
+                                    <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
+                                      placeholder="{{field.placeHolder[item.language]}}"
+                                      [ngClass]="dynamicDropDown[field.attributeName]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
+                                      [(value)]="userInputValues[field.attributeName][item.language]"
+                                      id="{{field.name}}{{item.language}}"
+                                      (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
+                                      (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
+                                      <mat-option *ngFor="let data of dynamicDropDown[field.attributeName][item.language]"
+                                        [value]="data.code">
+                                        {{ data.name }}
+                                      </mat-option>
+                                    </mat-select>
+                                  </span>
+                                  <span *ngIf="locationFieldNameList?.length">
+                                    <p [style.font-size]="fontSize.warningMessages" *ngIf="locationFieldNameList[field.locationHierarchyLevel-1] === fieldName && i === (buildJSONData[field.attributeName]?.length -1) && field.locationHierarchyLevel > 1"
+                                      class="warning-message">{{langJson.EnterAllAddress}}
+                                      {{field.placeHolder[langCode]}}</p>
+                                  </span>
+                                </span>
+                              </td>
+                            </tr>
+                            <tr *ngIf="typeOf(userInfo[field.attributeName]) === 'string'">
+                              <td class="sub-table-row each-Hierarchy-td ele-for-mob-card">
+                                <span *ngIf="dynamicDropDown[field.name]">
+                                <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
+                                  placeholder="{{langJson.select}} {{field.labelName[langCode][1]}}"
+                                  [ngClass]="dynamicDropDown[field.name]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
+                                  [(value)]="userInputValues[field.attributeName]" id="{{field.name}}"
+                                  (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
+                                  (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
+                                  <mat-option *ngFor="let data of dynamicDropDown[field.name].eng" [value]="data.code">
+                                    {{ data.name }}
+                                  </mat-option>
+                                </mat-select>
+                                </span>
+                                <span *ngIf="dynamicDropDown[field.attributeName]">
+                                  <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
+                                    placeholder="{{langJson.select}} {{field.labelName[langCode][1]}}"
+                                    [ngClass]="dynamicDropDown[field.attributeName]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
+                                    [(value)]="userInputValues[field.attributeName]" id="{{field.name}}"
+                                    (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
+                                    (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
+                                    <mat-option *ngFor="let data of dynamicDropDown[field.attributeName].eng" [value]="data.code">
+                                      {{ data.name }}
+                                    </mat-option>
+                                  </mat-select>
+                                  </span>
+                                <span *ngIf="locationFieldNameList?.length">
+                                  <p [style.font-size]="fontSize.warningMessages" *ngIf="locationFieldNameList[field.locationHierarchyLevel-1] === fieldName"
+                                    class="warning-message">{{langJson.EnterAllAddress}} {{field.placeHolder[langCode]}}
+                                  </p>
+                                </span>
+                              </td>
+                            </tr>
+                            <!-- input field for mobile view -->
+                          </table>
+                        </td>
+                      </tr>
+                      <tr *ngIf="field.controlType === 'fileupload'">
+                        <td class="main-table-data" width="100%">
+                          <table>
+                            <tr>
+                              <td width="100%" colspan="3"><label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][0]}}</label></td>
+                            </tr>
+                            <tr>
+                              <td class="width-of-input"><label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}<span
+                                    style="color: red;">*</span></label></td>
+                              <td width="3%"></td>
+                              <td class="width-of-input"><label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][2]}}</label></td>
+                            </tr>
+                            <tr>
+                              <td class="width-of-input">
+                                <mat-select [style.font-size]="fontSize.paragraph" disableOptionCentering class="enable-dropdown"
+                                  [value]="proofOfAddress['documenttype'] ? proofOfAddress['documenttype'] : '' "
+                                  placeholder="{{langJson.docTypePlaceholder}}" id="{{field.attributeName}}">
+                                  <mat-option  class="multiline-mat-option"
+                                    *ngFor="let data of dropDownValues[field.attributeName]"
+                                    (onSelectionChange)="captureAddressDropDownValue($event, field.attributeName)"
+                                    [value]="data.code">{{
+                                    data.name }}</mat-option>
+                                </mat-select>
+                              </td>
+                              <td width="3%"></td>
+                              <td class="width-of-input">
+                                <div class="search-input-card">
+                                  <input [style.font-size]="fontSize.paragraph" class="input"
+                                    [value]="proofOfAddress['documentreferenceId'] ? proofOfAddress['documentreferenceId'] : '' "
+                                    matInput #{{field.attributeName}} id="{{field.attributeName}}value"
+                                    placeholder="{{langJson.DocIDPlaceholder}}"
+                                    (blur)="captureAddressValue($event, field.attributeName, '')"
+                                    (focus)="captureVirtualKeyboard(field.attributeName, buildJSONData.proofOfAddress)"
+                                    #keyboardRef />
+                                  <em matSuffix class="material-icons mat-keyboard-icon"
+                                    (click)="openKeyboard(field.attributeName+'value')">keyboard</em>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr *ngIf="displayPOAUpload">
+                              <td width="100%" colspan="3"><label [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][3]}}<span
+                                    style="color: red;">*</span></label></td>
+                            </tr>
+                            <tr *ngIf="displayPOAUpload">
+                              <td width="100%" colspan="3">
+                                <div class="container" appDnd (fileDropped)="onFileDropped($event, 'POA')">
+                                  <input (click)="$event.target.value=null"
+                                    [disabled]="proofOfAddress.documenttype === undefined" type="file" #fileAddRef
+                                    id="fileAddRef" (change)="fileBrowseHandler($event.target.files, 'POA')"
+                                    accept=".pdf, .jpg, .jpeg, .png" />
+                                  <label style="margin-right: 1rem;display: flex;" for="fileAddRef">
+                                    <svg id="upload_icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24.042"
+                                      viewBox="0 0 24 24.042">
+                                      <g id="Group_13" data-name="Group 13" transform="translate(3 2.504)">
+                                        <path id="Path_988" data-name="Path 988"
+                                          d="M13,11.337l2.59,2.585L17,12.509,12,7.5,7,12.509l1.41,1.412L11,11.337v9.687h2Z"
+                                          transform="translate(-3 -7.5)" fill="#03a64a" />
+                                        <path id="Path_2004" data-name="Path 2004"
+                                          d="M19,3v7.012H5V3H3v7.012a2.008,2.008,0,0,0,2,2H19a2.008,2.008,0,0,0,2-2V3Z"
+                                          transform="translate(-3 6.517)" fill="#03a64a" />
+                                      </g>
+                                      <path id="Path_989" data-name="Path 989" d="M0,24.042H24V0H0Z" fill="none" />
+                                    </svg>
+                                    <span [style.font-size]="fontSize.lableText"
+                                      style="margin-top: 4px;padding-left: 5px; font-weight: 600;">{{langJson.uploadImage}}</span>
+                                  </label>
+                                  <h3 style="margin-right: 5px;" [style.font-size]="fontSize.lableText">{{langJson.or}}</h3>
+                                  &nbsp;
+                                  <h3 [style.font-size]="fontSize.lableText">{{langJson.dropImage}}</h3>
+                                </div>
+                                <p [style.font-size]="fontSize.warningMessages" *ngIf="isValidFileFormatPOA" class="warning-message">{{warningMessage}}</p>
+                              </td>
+                            </tr>
+                            <tr *ngIf="displayPOAUpload">
+                              <td width="100%" colspan="3">
+                                <label [style.font-size]="fontSize.paragraph" style="display: block;">{{field.labelName[langCode][4]}}</label>
+                                <label [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][5]}}</label>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td width="100%" colspan="3">
+                                <div class="files-list">
+                                  <div class="single-file" *ngFor="let file of filesPOA; let i = index">
+                                    <div class="file-icon" style="width: 50px">
+                                      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 58"
+                                        style="enable-background:new 0 0 58 58;" xml:space="preserve">
+                                        <polygon style="fill:#EDEADA;" points="51.5,14 37.5,0 6.5,0 6.5,58 51.5,58 " />
+                                        <g>
+                                          <path style="fill:#CEC9AE;"
+                                            d="M16.5,23h25c0.552,0,1-0.447,1-1s-0.448-1-1-1h-25c-0.552,0-1,0.447-1,1S15.948,23,16.5,23z" />
+                                          <path style="fill:#CEC9AE;"
+                                            d="M16.5,15h10c0.552,0,1-0.447,1-1s-0.448-1-1-1h-10c-0.552,0-1,0.447-1,1S15.948,15,16.5,15z" />
+                                          <path style="fill:#CEC9AE;"
+                                            d="M41.5,29h-25c-0.552,0-1,0.447-1,1s0.448,1,1,1h25c0.552,0,1-0.447,1-1S42.052,29,41.5,29z" />
+                                          <path style="fill:#CEC9AE;"
+                                            d="M41.5,37h-25c-0.552,0-1,0.447-1,1s0.448,1,1,1h25c0.552,0,1-0.447,1-1S42.052,37,41.5,37z" />
+                                          <path style="fill:#CEC9AE;"
+                                            d="M41.5,45h-25c-0.552,0-1,0.447-1,1s0.448,1,1,1h25c0.552,0,1-0.447,1-1S42.052,45,41.5,45z" />
+                                        </g>
+                                        <polygon style="fill:#CEC9AE;" points="37.5,0 37.5,14 51.5,14 " />
+                                      </svg>
+                                    </div>
+                                    <div class="info" [style.font-size]="fontSize.lableText">
+                                      <h4 class="name">
+                                        {{ file?.name }}
+                                      </h4>
+                                      <p class="size">
+                                        {{ formatBytes(file?.size) }}
+                                      </p>
+                                      <app-progress [progress]="file?.progress"></app-progress>
+                                    </div>
+                                    <div class="preview">
+                                      <img (click)="previewFile(i, 'POA',file.name)" mat-card-xs-image
+                                        style="margin: 0 0 -5px 0;" src='./assets/icons/iconfont/visibility_on.svg'
+                                        alt="" />
+                                    </div>
+                                    <div class="delete" (click)="deleteFile(i, 'POA')">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="18"
+                                        viewBox="0 0 14 18">
+                                        <path fill="#B1B1B1" fill-rule="nonzero"
+                                          d="M1 16c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v10zm3.17-7.83a.996.996 0 0 1 1.41 0L7 9.59l1.42-1.42a.996.996 0 1 1 1.41 1.41L8.41 11l1.42 1.42a.996.996 0 1 1-1.41 1.41L7 12.41l-1.42 1.42a.996.996 0 1 1-1.41-1.41L5.59 11 4.17 9.58a.996.996 0 0 1 0-1.41zM10.5 1L9.79.29C9.61.11 9.35 0 9.09 0H4.91c-.26 0-.52.11-.7.29L3.5 1H1c-.55 0-1 .45-1 1s.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1h-2.5z" />
+                                      </svg>
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="submit-btn-card">
+          <button [style.font-size]="fontSize.subHeading" [disabled]="previewDisabledInAddress || !isSelectedAllAddress" mat-raised-button
+            (click)="previewBtn('address')" color="primary" id="previewBtn">{{langJson.preview}}</button>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="{{'updatedemographic.contact' | translate}}">
+        <h3 [style.font-size]="fontSize.headingForUIN" class="tab-headings">{{'updatedemographic.contactHeading' | translate}}</h3>
+        <div *ngFor="let field of schema['identity']; let i = index" dir="{{sitealignment}}">
+          <div class="contact-update-card" *ngIf="field.tabgroup === 'contact'" gutterSize="7px">
+            <div class="contact-update-sub-card">
+              <div class="contact-update-each-sub-card" *ngIf="buildJSONData[field.attributeName]">
+                <mat-card-subtitle [style.font-size]="fontSize.paragraph" class="contact-lable">{{field.labelName[langCode][0]}}</mat-card-subtitle>
+                <input [style.font-size]="fontSize.paragraph" type="text" class="readonly" readonly="true" disabled="true"
+                  [value]="buildJSONData[field.attributeName].value">
+              </div>
+              <div class="contact-update-each-sub-card">
+                <mat-card-subtitle [style.font-size]="fontSize.paragraph" class="contact-lable">{{field.labelName[langCode][1]}}</mat-card-subtitle>
+                <div class="search-input-card" *ngIf="field.attributeName === 'email'">
+                  <input [style.font-size]="fontSize.paragraph" class="input" [value]="userIdEmail" matInput type="text" #{{field.attributeName}}
+                    id="{{field.attributeName}}" (input)="captureContactValue($event, field )"
+                    [placeholder]="field.placeHolder[langCode]"
+                    (blur)="captureContactValue($event, field)"
+                    (focus)="captureVirtualKeyboard(field.attributeName, buildJSONData[field.attributeName].index)"
+                    (click)="isUpdatedataInProgress($event, 'textField')"
+                    #keyboardRef />
+                  <em matSuffix class="material-icons mat-keyboard-icon"
+                    (click)="openKeyboard(field.attributeName)">keyboard</em>
+                </div>
+                <div class="search-input-card" *ngIf="field.attributeName === 'phone'">
+                  <input [style.font-size]="fontSize.paragraph" class="input" [value]="userIdPhone" matInput type="text" #{{field.attributeName}}
+                    id="{{field.attributeName}}" (input)="captureContactValue($event, field)"
+                    [placeholder]="field.placeHolder[langCode]"
+                    (blur)="captureContactValue($event, field)"
+                    (focus)="captureVirtualKeyboard(field.attributeName, buildJSONData[field.attributeName].index)"
+                    (click)="isUpdatedataInProgress($event, 'textField')"
+                    #keyboardRef />
+                  <em matSuffix class="material-icons mat-keyboard-icon"
+                    (click)="openKeyboard(field.attributeName)">keyboard</em>
+                </div>
+              </div>
+              <div class="contact-update-each-btn-card">
+                <mat-card-subtitle class="contact-lable-dummy"></mat-card-subtitle>
+                <button [style.font-size]="fontSize.subHeading" class="contact-send-otp-btn"
+                  [disabled]="sendOtpDisable || !(field.attributeName === contactTye)"
+                  (click)="sendOTPBtn(field.attributeName)" mat-raised-button color="primary"
+                  id="sendOTP{{field.attributeName}}">{{field.labelName[langCode][3]}}</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="{{'updatedemographic.languagePreference' | translate}}" class="language-card">
+        <h3 [style.font-size]="fontSize.headingForUIN" class="tab-headings">{{'updatedemographic.languageHeading' | translate}}</h3>
+        <div *ngFor="let field of schema['identity']; let i = index" dir="{{sitealignment}}">
+          <div *ngIf="field.tabgroup === 'notificationLanguage' && field.controlType === 'dropdown'">
+            <mat-grid-list *ngFor="let language of supportedLanguages;" [cols]="cols" rowHeight="100px"
+              gutterSize="7px">
+              <mat-grid-tile>
+                <div class="mini-card"
+                  *ngIf="field.tabgroup === 'notificationLanguage' && field.controlType === 'dropdown'">
+                  <mat-card-title style="margin-right:3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][0]}}</mat-card-title>
+                  <span *ngIf="buildJSONData[field.attributeName]"><input [style.font-size]="fontSize.paragraph" style="border: none;" type="text"
+                      class="readonly" readonly="true" disabled="true"
+                      [value]="buildJSONData[field.attributeName].value"></span>
+                </div>
+              </mat-grid-tile>
+              <mat-grid-tile>
+                <div class="mini-card"
+                  *ngIf="field.tabgroup === 'notificationLanguage' && field.controlType === 'dropdown'">
+                  <mat-card-title style="margin-right:3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}</mat-card-title>
+                  <mat-select #matSelect [style.font-size]="fontSize.paragraph" [placeholder]="field.placeHolder[langCode]" disableOptionCentering class="enable-dropdown"
+                    [(ngModel)]="selected2" id="{{field.attributeName}}"
+                    (selectionChange)="capturePerfLang($event, field.attributeName)"
+                    (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
+                    <mat-option *ngFor="let data of newNotificationLanguages" [value]="data.value">{{ data.value
+                      }}</mat-option>
+                  </mat-select>
+                </div>
+              </mat-grid-tile>
+            </mat-grid-list>
+            <div [ngClass]="langCode === 'ara' ? 'perLang-submit-btn-card-ara' :'perLang-submit-btn-card'"
+              *ngIf="langJson">
+              <button [style.font-size]="fontSize.paragraph" [disabled]="!userPrefLang[field.attributeName] || !disablePrefLangBtn" mat-raised-button
+                (click)="updatenotificationLanguage()" color="primary" id="submit">{{langJson.submit}}</button>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+
+  <mat-card style="padding: 16px;" *ngIf="showPreviewPage">
+    <mat-card-subtitle [style.font-size]="fontSize.heading" style="font-size: 20px;" class="preview-heading">{{langJson.preview}}</mat-card-subtitle>
+    <div class="identity-card">
+      <mat-card-subtitle [style.font-size]="fontSize.lableText" style="color: #000000;">{{matTabLabel}}</mat-card-subtitle>
+      <button (click)="backBtn()" mat-button-toggle class="edit-btn">
+        <img alt="" src="./assets/icons/iconfont/edit_black_24dp (2).svg" alt="" />
+      </button>
+    </div>
+    <div class="table-main-card">
+      <div [style.width]="width">
+        <div class="input-values-main-card">
+          <div>
+            <table class="preview-input-size" *ngFor="let item of buildCloneJsonData">
+              <tr *ngIf="typeOf(item.newData) !== 'string' && item.newData[0]">
+                <td [style.font-size]="fontSize.paragraph" *ngIf="item.newData[0].value">{{item.labelName}}</td>
+              </tr>
+              <tr *ngIf="item.newData && typeOf(item.newData) === 'string'">
+                <td [style.font-size]="fontSize.paragraph">{{item.labelName}}</td>
+              </tr>
+              <tr *ngIf="typeOf(item.newData) !== 'string'">
+                <td>
+                  <span *ngFor="let eachLang of item.newData" style="margin-bottom: 5px;">
+                    <input [style.font-size]="fontSize.paragraph" *ngIf="eachLang.value" style="margin-bottom: 5px; color: #000000;" type="text"
+                      class="readonly" readonly="true" disabled="true" [value]="eachLang.value">
+                  </span>
+                </td>
+              </tr>
+              <tr *ngIf="typeOf(item.newData) === 'string' && item.newData">
+                <td *ngIf="item.newData?.includes('/')">
+                  <input [style.font-size]="fontSize.paragraph" style="color: #000000;" type="text" class="readonly" readonly="true" disabled="true"
+                    [value]="item.newData | date:'dd/MMM/yyyy'">
+                </td>
+                <td *ngIf="!item.newData?.includes('/')">
+                  <input [style.font-size]="fontSize.paragraph" style="color: #000000;" type="text" class="readonly" readonly="true" disabled="true"
+                    [value]="item.newData">
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="files-list">
+          <mat-card-title [style.font-size]="fontSize.paragraph" class="files-list-title">{{langJson.documentUploaded}}</mat-card-title>
+          <div class="preview-input-size">
+            <div class="uploaded-single-file" *ngFor="let file of uploadedFiles; let i = index">
+              <div class="file-icon" style="width: 50px">
+                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 58"
+                  style="enable-background:new 0 0 58 58;" xml:space="preserve">
+                  <polygon style="fill:#EDEADA;" points="51.5,14 37.5,0 6.5,0 6.5,58 51.5,58 " />
+                  <g>
+                    <path style="fill:#CEC9AE;"
+                      d="M16.5,23h25c0.552,0,1-0.447,1-1s-0.448-1-1-1h-25c-0.552,0-1,0.447-1,1S15.948,23,16.5,23z" />
+                    <path style="fill:#CEC9AE;"
+                      d="M16.5,15h10c0.552,0,1-0.447,1-1s-0.448-1-1-1h-10c-0.552,0-1,0.447-1,1S15.948,15,16.5,15z" />
+                    <path style="fill:#CEC9AE;"
+                      d="M41.5,29h-25c-0.552,0-1,0.447-1,1s0.448,1,1,1h25c0.552,0,1-0.447,1-1S42.052,29,41.5,29z" />
+                    <path style="fill:#CEC9AE;"
+                      d="M41.5,37h-25c-0.552,0-1,0.447-1,1s0.448,1,1,1h25c0.552,0,1-0.447,1-1S42.052,37,41.5,37z" />
+                    <path style="fill:#CEC9AE;"
+                      d="M41.5,45h-25c-0.552,0-1,0.447-1,1s0.448,1,1,1h25c0.552,0,1-0.447,1-1S42.052,45,41.5,45z" />
+                  </g>
+                  <polygon style="fill:#CEC9AE;" points="37.5,0 37.5,14 51.5,14 " />
+                </svg>
+              </div>
+              <div class="info" [style.font-size]="fontSize.lableText">
+                <h4 class="name">
+                  {{ file?.name }}
+                </h4>
+                <p class="size">
+                  {{ formatBytes(file?.size) }}
+                </p>
+                <app-progress [progress]="file?.progress"></app-progress>
+              </div>
+
+              <div class="preview">
+                <img *ngIf="file.name !== selectedFileInPreviewPage" (click)="previewFileInPreviewPage(i,file.name)"
+                  mat-card-xs-image style="margin: 0 0 -5px 0;" src='./assets/icons/iconfont/visibility_on.svg'
+                  alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-agree-card">
+      <div>
+        <button [style.font-size]="fontSize.paragraph" id="submitBtn" *ngIf="updatingtype === 'identity' " [disabled]="((finalUserCloneData | keyvalue)?.length < 1)"
+          (click)="updateBtn()" mat-raised-button color="primary">{{langJson.update}}</button>
+        <button [style.font-size]="fontSize.paragraph" id="submitBtn" *ngIf="updatingtype === 'address' " [disabled]="((finalUserCloneData | keyvalue)?.length < 1)"
+          (click)="updateBtn()" mat-raised-button color="primary">{{langJson.update}}</button>
+      </div>
+    </div>
+  </mat-card>
+</div>

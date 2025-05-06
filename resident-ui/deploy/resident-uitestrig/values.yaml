@@ -1,0 +1,11 @@
+modules:
+  - name: resident-ui
+    enabled: true
+    image:
+      registry: docker.io
+      repository: mosipid/residenttest
+      tag: 0.9.1
+  - name: admin-ui
+    enabled: false
+  - name: pmp-ui
+    enabled: false

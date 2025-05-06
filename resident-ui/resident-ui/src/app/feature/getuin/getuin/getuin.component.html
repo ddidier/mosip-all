@@ -1,0 +1,84 @@
+<div class="main-container" *ngIf="!isUinNotReady">
+  <span class="breadcrumb" *ngIf="popupMessages" [style.font-size]="fontSize.breadcrumb">
+    <a (click)="onItemSelected('home')">{{popupMessages.uinservices.home }} &nbsp;&nbsp;</a> >&nbsp;&nbsp;<span
+      class="active">{{popupMessages.uinservices.label}}</span>
+  </span>
+  <div class="spinner" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+  <mat-card class="login-card" *ngIf="!isLoading">
+    <div *ngIf="getUinData" class="form-container" [style.width]="width">
+      <div class="form-card" >
+        <div class="uin-login-title-card">
+          <mat-card-subtitle [style.font-size]="fontSize.paragraph" class="login-Input-heading">{{getUinData.title |
+            translate}}</mat-card-subtitle>
+          <button class="info-icon-button" #tooltip="matTooltip" [matTooltip]="infoText" matTooltipPosition="below" matTooltipClass="left">
+          <img  alt="info-icon" class="info-icon" src="./assets/images/info_black_24dp (1).png" />
+          </button>
+        </div>
+        <input [style.font-size]="fontSize.paragraph" id="aidValue" class="input-text" type="text" ngModel (input)="getUserID($event)" (keypress)="isNumberKey($event)" placeholder="{{getUinData.enterHere}}"/>
+        <!-- <br /> -->
+        <!-- <label class="label-text" >{{getUinData.description | translate}}</label> -->
+        <div *ngIf="siteKey && captchaEnable" id="recaptcha-container">
+          <app-captcha *ngIf="captchaEnable" [captchaSiteKey]="siteKey" [resetCaptcha]="resetCaptcha"
+            (captchaEvent)="getCaptchaToken($event)"></app-captcha>
+        </div>
+        <br />
+        <button [style.font-size]="fontSize.paragraph" id="getUinSendOtpBtn" (click)="submitUserID()" [disabled]="disableSendOtp" mat-raised-button
+          class="login-uin-otp-btn" >{{getUinData.buttonText | translate}}</button>
+      </div>
+    </div>
+  </mat-card>
+</div>
+
+<!-- UIN in progress card -->
+
+<div class="main-container" *ngIf="isUinNotReady">
+  <span class="breadcrumb" [style.font-size]="fontSize.breadcrumb">
+    <a (click)="onItemSelected('home')">{{'uinservices.home' | translate}} &nbsp;&nbsp;</a>
+    >&nbsp;&nbsp;<span style="cursor: pointer;" (click)="onItemSelected('')">{{'uinservices.label' | translate}} </span>
+    >&nbsp;&nbsp;<span class="active">
+      {{getStatusData.status}}</span>
+  </span>
+  <div class="status-title-card">
+    <mat-card-subtitle [style.font-size]="fontSize.subHeading"
+      class="status-title-text" *ngIf="aid && aidStatus === 'SUCCESS' || aidStatus === 'IN-PROGRESS'">{{getStatusData.uinTitleDescription.replace("$AID",aid)}}
+    </mat-card-subtitle>
+    <mat-card-subtitle [style.font-size]="fontSize.paragraph"
+      class="status-title-text" *ngIf="aid && aidStatus === 'FAILURE' ">{{getStatusData.uinTitleDescription2.replace("$AID",aid)}}
+    </mat-card-subtitle>
+      <mat-card-subtitle [style.font-size]="fontSize.paragraph" *ngIf="aidStatus === 'SUCCESS' || aidStatus === 'IN-PROGRESS'" class="req-msg-text">{{getStatusData.requestMsg}}</mat-card-subtitle>
+      <mat-card-subtitle [style.font-size]="fontSize.paragraph" *ngIf="aidStatus === 'FAILURE' " class="req-msg-text">{{getStatusData.requestMsg2}}</mat-card-subtitle>
+  </div>
+  <mat-card class="status-details-card">
+    <mat-card-title [style.font-size]="fontSize.headingForUIN" class="uin-title">{{getStatusData.UINCardStatus}}</mat-card-title>
+    <div class="progress-card">
+      <ul class="progressbar">
+        <li *ngFor="let item of stageKeys; let i = index">
+          <div class="stages-card">
+            <div *ngIf="i < orderStatusIndex" class="active-position-icon position-icon">
+              <!-- <img src="./assets/icons/iconfont/Path 7837.svg" /> -->
+            </div>
+            <div *ngIf="i === orderStatusIndex"  class= {{classes[aidStatus]}}>
+              <!-- <img src="./assets/icons/iconfont/Path 7837.svg" /> -->
+            </div>
+            <div *ngIf="i > orderStatusIndex"  class="inactive-position-icon position-icon">
+              <!-- <img  src="./assets/icons/iconfont/Path 7837.svg" /> -->
+            </div>
+            <hr *ngIf="i < orderStatusIndex" class="completed-stage-bar stage-bar" />
+            <!-- <hr *ngIf="i === orderStatusIndex" [ngClass]="{ 'completed-stage-bar stage-bar' : aidStatus === 'SUCCESS', 'failure-stage-bar stage-bar' : aidStatus === 'FAILURE' }" /> -->
+            <hr *ngIf="i > orderStatusIndex" class="incompleted-stage-bar stage-bar" />
+            <mat-card-subtitle  [style.font-size]="fontSize.subHeading" *ngIf="i < orderStatusIndex" class="completed-position-text">{{getStatusData.statusStages[item]}}</mat-card-subtitle>
+            <mat-card-subtitle  [style.font-size]="fontSize.subHeading" *ngIf="i === orderStatusIndex" [ngClass]="{'active-position-text' : aidStatus === 'SUCCESS', 'failure-position-text' : aidStatus === 'FAILURE'}">{{getStatusData.statusStages[item]}}</mat-card-subtitle>
+            <mat-card-subtitle  [style.font-size]="fontSize.subHeading" *ngIf="i > orderStatusIndex" class="incomplete-position-text">{{getStatusData.statusStages[item]}}</mat-card-subtitle>
+          </div>
+        </li>
+      </ul>
+      <!-- <mat-expansion-panel style="margin-top:1rem;">
+        <mat-expansion-panel-header>
+          {{getStatusData.trackDetailsHeading}}
+        </mat-expansion-panel-header>
+      </mat-expansion-panel> -->
+    </div>
+  </mat-card>
+</div>

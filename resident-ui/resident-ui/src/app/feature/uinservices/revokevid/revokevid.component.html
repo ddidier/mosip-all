@@ -1,0 +1,76 @@
+<span class="breadcrumb" [style.font-size]="fontSize.breadcrumb">
+	<!-- <a (click)="onItemSelected('dashboard')">{{'dashboard.home' | translate}} &nbsp;&nbsp;</a> > &nbsp;&nbsp; -->
+	<a (click)="onItemSelected('uinservices/dashboard')">{{'dashboard.uinservices' | translate}} &nbsp;&nbsp;</a> > &nbsp;&nbsp;<span class="active">{{'managemyvid.title' | translate}}</span>
+</span>
+
+<div class="main-div" *ngIf="langJSON">
+	<div class="spinner" *ngIf="isLoading">
+		<mat-spinner></mat-spinner>
+   </div>
+	<mat-card *ngIf="!isLoading">
+        <h3 [style.font-size]="fontSize.headingForUIN" style="color: #505050;">{{'managemyvid.title' | translate}}</h3>
+        <p [style.font-size]="fontSize.paragraph" class="intro-description">{{'managemyvid.introDescription' | translate}}</p>
+		<table *ngIf="policyType" style="width:100%">
+			<tr *ngFor = "let policy of policyType.vidPolicies;">
+				<td style="width:100%">
+					<div class="title-card" >				 
+				     <span class="vid-type-card">
+						<h4 [style.font-size]="fontSize.subHeading" style="color: #000000;">{{langJSON[policy.vidType].vidType}}</h4>
+						<span>
+						<mat-icon  [matTooltip]="infoText[policy.vidType].replace('$instancesVID', policy.vidPolicy.instancesAllowed).replace('$expiryTime', policy.vidPolicy.validForInMinutes).replace('$transactionLimit', policy.vidPolicy.transactionsAllowed).replace('$VID', policy.vidPolicy.instancesAllowed > 1 ? 'VID\'s' : 'VID')" matTooltipPosition="below" matTooltipClass="below" class="user-icon" >info</mat-icon> 
+					</span>
+					</span>
+					<button [id]="policy.vidType" mat-raised-button color="primary" class="create-btn" (click)="generateVIDBtn(policy.vidType)"><img style="margin-right: 5px; margin-bottom: 2px;" src="./assets/icons/iconfont/add_circle_black_24dp (1).svg" alt=""/>{{'managemyvid.create' | translate}}</button>
+				</div>
+				<mat-card [style.font-size]="fontSize.subHeading" class="empty-vid-card" *ngIf="!finalTypeList[policy.vidType]?.length">{{langJSON.noVidsText.replace("$VIDTYPE",langJSON[policy.vidType].vidType)}}<span style="font-weight: 600;">{{langJSON.create}}</span>{{langJSON.noVidsText2}}</mat-card>
+				    <mat-grid-list   style="width:100%;" gutterSize="10px" [cols]="cols"  rowHeight="180px" (window:resize)="onResize($event)" *ngIf="finalTypeList[policy.vidType]" class="each-vid-card" dir="{{ sitealignment}}">
+						<mat-grid-tile  *ngFor = "let list of finalTypeList[policy.vidType]; let i = index">
+							<mat-card [id]="list.vid" class="mini-card">
+							  <table style="width:100%">
+							  <tr>
+							    <td [style.font-size]="fontSize.breadcrumb" colspan="2" class="label">{{'managemyvid.vid' | translate}}</td>
+							  </tr>
+							  <tr>
+							    <td colspan="2" >
+							    	<span [style.font-size]="fontSize.paragraph" class="mat-card-header-text"  *ngIf=list.showvid><span style="width: 11rem;">{{list.vid}}</span>&nbsp;&nbsp;&nbsp;<span style="cursor:pointer;" (click)="displayVid(finalTypeList, policy.vidType, list, false)"><img src="assets\eye_slash.png" style="color: green;width: 18px;" alt=""></span></span>
+							    	<span [style.font-size]="fontSize.paragraph" class="mat-card-header-text" *ngIf=!list.showvid><span style="width: 11rem;">{{list.maskedVid}}</span>&nbsp;&nbsp;&nbsp;<mat-icon style="color: green;font-size: 18px;cursor:pointer;" (click)="displayVid(finalTypeList, policy.vidType, list, true)">remove_red_eye</mat-icon></span>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td [style.font-size]="fontSize.breadcrumb" style="width:50%" class="label">{{'managemyvid.generatedOn' | translate}}</td>
+							    <td [style.font-size]="fontSize.breadcrumb" style="width:50%" class="label">{{'managemyvid.expiry' | translate}}</td>
+							  </tr>
+							  <tr>
+							    <td  [style.font-size]="fontSize.paragraph" style="width:50%">
+							    	{{list.genratedOnTimestamp}}
+							    </td>
+							    <td [style.font-size]="fontSize.paragraph" style="width:50%" *ngIf="list.expiryTimestamp">
+							    	{{list.expiryTimestamp}}
+							    </td>
+								<td [style.font-size]="fontSize.paragraph" style="width:50%" *ngIf="!list.expiryTimestamp">
+							    	NA
+							    </td>
+							  </tr>
+							  <tr>
+							    <td [style.font-size]="fontSize.breadcrumb" style="width:50%" class="label">{{'managemyvid.transactionLeft' | translate}}</td>
+							    <td style="width:50%" class="label"></td>
+							  </tr>
+							  <tr>
+							    <td style="width:50%">
+							    	<span [style.font-size]="fontSize.paragraph" *ngIf="list.transactionsLeftCount">{{list.transactionsLeftCount}}</span>
+							    	<span [style.font-size]="fontSize.paragraph" *ngIf="!list.transactionsLeftCount">NA</span>							    	
+							    </td>
+							    <td style="width:50%;float: right;">
+							    	<span (click)="downloadVIDBtn(list.vid,policy.vidType)" style="color: green;font-size: 24px;cursor:pointer;"><img id="download{{i}}" src="assets\download.png" alt=""></span>&nbsp;&nbsp;&nbsp;
+							    	<mat-icon id="delete{{i}}" style="color: #DB4F4F;font-size: 24px;cursor:pointer;" (click)="revokeVIDBtn(list.vid,policy.vidType)">delete</mat-icon>
+							    </td>
+							  </tr>
+							  </table>
+							</mat-card>
+						</mat-grid-tile>		  
+					</mat-grid-list>		   	
+				</td>
+			</tr>
+		</table>
+	</mat-card>	
+</div>

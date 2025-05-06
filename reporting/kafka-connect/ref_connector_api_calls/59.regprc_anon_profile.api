@@ -1,0 +1,102 @@
+# these following will be taken from env
+#DB_USER=
+#DB_PORT=
+#DB_HOSTNAME=
+#DB_PASS=
+#DB_PREFIX_INDEX=
+#ES_URL=
+
+CONN_NAME="regprc_anon_profile_$DB_PREFIX_INDEX"; # change this.. give unique name for each db/table
+
+ES_CONN_URL='es-connect:8083'; # needn't change .. this is the ES-connector service name
+
+DB_NAME='mosip_regprc'; # change this
+DB_TABLES='regprc.anonymous_profile'
+ES_INDICES=$(echo $DB_TABLES | sed -E "s/([^,]+)/$DB_PREFIX_INDEX.\1/g")
+
+curl \
+  -X POST \
+  http://$ES_CONN_URL/connectors \
+  -H 'Content-Type: application/json' \
+  -d \
+  '{
+      "name": '\"$CONN_NAME\"',
+      "config": {
+          "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+          "name": '\"$CONN_NAME\"',
+          "connection.url": '\"$ES_URL\"',
+          "tasks.max": "1",
+          "topics": '\"$ES_INDICES\"',
+          "key.ignore": "false",
+          "schema.ignore": "true",
+          "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+          "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+          "key.converter.schemas.enable": "false",
+          "value.converter.schemas.enable": "false",
+
+          "behavior.on.null.values": "DELETE",
+
+          "transforms": "ext1,ext2,tsconvert01,tsconvert02,tsconvert03,stringtojson01,latitudeJoin,longitudeJoin,join01,anonTransform,tsSelect",
+
+          "transforms.ext1.type": "org.apache.kafka.connect.transforms.ExtractField$Value",
+          "transforms.ext1.field": "payload",
+          "transforms.ext2.type": "org.apache.kafka.connect.transforms.ExtractField$Value",
+          "transforms.ext2.field": "after",
+
+          "transforms.tsconvert01.type": "io.mosip.kafka.connect.transforms.TimestampConverterAdv$Value",
+          "transforms.tsconvert01.field": "cr_dtimes",
+          "transforms.tsconvert01.input.type": "micro_sec",
+
+          "transforms.tsconvert02.type": "io.mosip.kafka.connect.transforms.TimestampConverterAdv$Value",
+          "transforms.tsconvert02.field": "upd_dtimes",
+          "transforms.tsconvert02.input.type": "micro_sec",
+
+          "transforms.tsconvert03.type": "io.mosip.kafka.connect.transforms.TimestampConverterAdv$Value",
+          "transforms.tsconvert03.field": "del_dtimes",
+          "transforms.tsconvert03.input.type": "micro_sec",
+
+          "transforms.stringtojson01.type": "io.mosip.kafka.connect.transforms.StringToJson$Value",
+          "transforms.stringtojson01.input.field": "profile",
+
+          "transforms.latitudeJoin.type": "io.mosip.kafka.connect.transforms.DynamicNewField$Value",
+          "transforms.latitudeJoin.es.index": '\"$DB_PREFIX_INDEX.master.registration_center\"',
+          "transforms.latitudeJoin.es.url": '\"$ES_URL\"',
+          "transforms.latitudeJoin.input.fields": "profile.enrollmentCenterId,lang_code",
+          "transforms.latitudeJoin.input.default.values": "null,eng",
+          "transforms.latitudeJoin.es.input.fields": "id,lang_code",
+          "transforms.latitudeJoin.es.output.field": "latitude",
+          "transforms.latitudeJoin.output.field": "temp_latitude",
+
+          "transforms.longitudeJoin.type": "io.mosip.kafka.connect.transforms.DynamicNewField$Value",
+          "transforms.longitudeJoin.es.index": '\"$DB_PREFIX_INDEX.master.registration_center\"',
+          "transforms.longitudeJoin.es.url": '\"$ES_URL\"',
+          "transforms.longitudeJoin.input.fields": "profile.enrollmentCenterId,lang_code",
+          "transforms.longitudeJoin.input.default.values": "null,eng",
+          "transforms.longitudeJoin.es.input.fields": "id,lang_code",
+          "transforms.longitudeJoin.es.output.field": "longitude",
+          "transforms.longitudeJoin.output.field": "temp_longitude",
+
+          "transforms.join01.type": "io.mosip.kafka.connect.transforms.DynamicNewField$Value",
+          "transforms.join01.es.index": '\"$DB_PREFIX_INDEX.master.doc_type\"',
+          "transforms.join01.es.url": '\"$ES_URL\"',
+          "transforms.join01.input.fields": "profile.documents,lang_code",
+          "transforms.join01.input.default.values": "null,eng",
+          "transforms.join01.es.input.fields": "code,lang_code",
+          "transforms.join01.es.output.field": "name",
+          "transforms.join01.output.field": "documents_names",
+
+          "transforms.anonTransform.type": "io.mosip.kafka.connect.transforms.AnonymousProfileTransform$Value",
+          "transforms.anonTransform.profiles.fields.list": "profile",
+          "transforms.anonTransform.age.groups.list": "0-5, 5-18, 18-60, 60 and above",
+          "transforms.anonTransform.age.groups.output.field": "ageGroup",
+          "transforms.anonTransform.channel.groups.list": "Both phone and email,only phone,only email,None",
+          "transforms.anonTransform.es.url": '\"$ES_URL\"',
+          "transforms.anonTransform.kafka.topic.name": '\"$ES_INDICES\"',
+          "transforms.anonTransform.profile.listOfFunctions": "processBiometricList,processAgeGroup,processChannel,processProcessName,processAssister,processLocationList",
+          "transforms.anonTransform.listOfFunctions": "processRegistrationCenter",
+
+          "transforms.tsSelect.type": "io.mosip.kafka.connect.transforms.TimestampSelector$Value",
+          "transforms.tsSelect.ts.order": "upd_dtimes,cr_dtimes",
+          "transforms.tsSelect.output.field": "@timestamp_gen"
+      }
+}';

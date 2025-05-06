@@ -1,0 +1,149 @@
+<span class="breadcrumb" [style.font-size]="fontSize.breadcrumb">
+	<!-- <a (click)="onItemSelected('dashboard')">{{'dashboard.home' | translate}} &nbsp;&nbsp;</a> > &nbsp;&nbsp; -->
+	<a (click)="onItemSelected('uinservices/dashboard')">{{'dashboard.uinservices' | translate}} &nbsp;&nbsp;</a> >
+	&nbsp;&nbsp;<span class="active">{{'viewhistory.title' | translate}}</span>
+</span>
+
+<div class="main-div-viewhistory">
+	<div class="spinner spinner2" *ngIf="isLoading">
+		<mat-spinner></mat-spinner>
+   </div>
+	<mat-card *ngIf="!isLoading">
+		<h3 [style.font-size]="fontSize.headingForUIN" class="main-heading">{{'viewhistory.title' | translate}}</h3>
+		<mat-grid-list *ngIf="responselist" [cols]="cols" rowHeight="100px" gutterSize="7px" dir="{{sitealignment}}">
+	        <mat-grid-tile>
+	          <div class="mini-card">
+	            <p class="search-input-label"><span [style.font-size]="fontSize.paragraph" class="label" >{{'viewhistory.inputsearch' |translate}}</span></p>
+	            <span class="input event-id-search-card" >
+					<input [style.font-size]="fontSize.breadcrumb" dir="{{sitealignment}}" [value]="searchText" type="number" id="appIdValue" name="appIdValue" (blur)="captureValue($event, '', 'searchText', 'textbox')" 
+					placeholder="{{'viewhistory.inputAppId' | translate}}" class="service-input-card" (focus)="captureVirtualKeyboard(search, 0)" #keyboardRef/>
+					<i matSuffix class="material-icons mat-keyboard-icon" (click)="openKeyboard()">keyboard</i>
+				</span>
+	          </div>
+	        </mat-grid-tile>
+	        <mat-grid-tile>
+	          <div class="mini-card">
+	            <p class="search-input-label"><span [style.font-size]="fontSize.paragraph" class="label">{{'viewhistory.inputHistory' |translate}}</span></p>
+					<span class="input">
+						<button [style.font-size]="fontSize.breadcrumb" id="historyTypeBtn" class="dropdown-btn" [matMenuTriggerFor]="basic">{{serviceHistorySelectedValue}}<mat-icon class="dropdown-arrow">keyboard_arrow_down</mat-icon></button>
+						<mat-menu #basic="matMenu" [xPosition]="langCode === 'ara' ? 'before' : 'after'" [backdropClass]="'viewHistory'">
+							<ng-container *ngFor="let serviceType of serviceTypeFilter">
+								<button mat-menu-item >
+									<div (click)="captureValue($event,serviceType.value, 'serviceType', 'dropdown')" class="check-box-card">
+										<input class="check-box" type="checkbox" [checked]="serviceType.label.checked"
+											id="{{serviceType.value}}" />
+										<label [style.font-size]="fontSize.paragraph" class="filter-lable">{{serviceType.label.serviceType}}</label>
+									</div>
+								</button>
+							</ng-container>
+						</mat-menu>					
+					</span>
+	          </div>
+	        </mat-grid-tile>
+	        <mat-grid-tile>
+	          <div class="mini-card">
+	            <p class="search-input-label"><span [style.font-size]="fontSize.paragraph" class="label">{{'viewhistory.inputFrom' |translate}}</span></p>
+	            <mat-card-subtitle style="margin-top: -6px; margin-bottom: 2px; "><span class="input date-calender"><input [style.font-size]="fontSize.breadcrumb" readonly id="fromPickertext" [(ngModel)]="startdate" [max]="today" matInput
+						[matDatepicker]="fromPicker" class="datepicker-card"
+						(dateChange)="captureValue($event, '', 'fromDate', 'datepicker')" (click)="fromPicker.open()">
+						<mat-datepicker-toggle matSuffix [for]="fromPicker" ></mat-datepicker-toggle>
+						<mat-datepicker #fromPicker></mat-datepicker></span></mat-card-subtitle>
+	          </div>
+	        </mat-grid-tile>
+	        <mat-grid-tile>
+	          <div class="mini-card">
+	            <p class="search-input-label"><span [style.font-size]="fontSize.paragraph" class="label">{{'viewhistory.inputTo' |translate}}</span></p>
+	            <mat-card-subtitle style="margin-top: -6px; margin-bottom: 2px;"><span class="input date-calender"><input [style.font-size]="fontSize.breadcrumb" readonly id="toPickertext" [(ngModel)]="selectedDate" matInput [min]="toDateStartDate" [max]="today"
+						[matDatepicker]="toPicker" (click)="toPicker.open()" class="datepicker-card"
+						(dateChange)="captureValue($event, '', 'toDate', 'datepicker')">
+						<mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+						<mat-datepicker #toPicker></mat-datepicker></span></mat-card-subtitle>
+	          </div>
+	        </mat-grid-tile>
+	        <mat-grid-tile>
+	          <div class="mini-card">
+	            <p class="search-input-label"><span [style.font-size]="fontSize.paragraph" class="label">{{'viewhistory.inputStatus' | translate}}</span></p>
+	            <!-- <mat-card-subtitle style="display: flex;"> -->
+					<span class="input">
+						<button [style.font-size]="fontSize.breadcrumb" class="dropdown-btn" id="statusTypeBtn" [matMenuTriggerFor]="basic2"><span>{{statusHistorySelectedValue}}</span><mat-icon class="dropdown-arrow">keyboard_arrow_down</mat-icon></button>
+						<mat-menu #basic2="matMenu" [xPosition]="langCode === 'ara' ? 'before' : 'after'" [backdropClass]="'viewHistory'" >
+							<ng-container *ngFor="let status of statusTypeFilter">
+								<button mat-menu-item>
+									<div (click)="captureValue($event, status.value, 'statusFilter', 'dropdown')" class="check-box-card">
+										<input class="check-box" type="checkbox" [checked]="status.label.checked"
+											id="{{status.value}}" />
+										<label [style.font-size]="fontSize.paragraph" class="filter-lable">{{status.label.statusType}}</label>
+									</div>
+								</button>
+							</ng-container>
+						</mat-menu>
+					</span>
+				<!-- </mat-card-subtitle> -->
+	          </div>
+	        </mat-grid-tile>
+	        <mat-grid-tile>
+	          <div class="mini-card">
+	            <mat-card-header><span class="label"></span></mat-card-header>
+	            <mat-card-subtitle style="display: flex;margin-top: 12px;"><span class="datepicker-card" style="display: contents;">
+					<button id="searchbtn" mat-raised-button color="primary"
+						(click)="search()">{{'viewhistory.searchBtn' | translate}}</button>&nbsp;&nbsp;&nbsp;&nbsp;<button [disabled]="disableDownloadBtn" id="downloadbtn" mat-button
+						 (click)="downloadServiceHistory()"><img class="save-icon"
+							src="./assets/images/save.png" /></button>
+					</span></mat-card-subtitle>
+	          </div>
+	        </mat-grid-tile> 
+	    </mat-grid-list>
+		<table *ngIf="responselist" class="history-data">
+			<tr *ngFor="let data of responselist; let i = index" style="outline: thin solid silver;border-radius: 5px; width: 100px;"
+				multi>
+				<mat-expansion-panel>
+					<mat-expansion-panel-header id="panelHeader{{i}}">
+					  <div class="header-item-card" [style.font-size]="fontSize.paragraph">
+						<td class="event-id-text" ><span *ngIf="data.pinnedStatus === true"><img
+							src="assets\pin.png" style="margin-right: 4px; width: 8px;" alt=""></span><span>{{'viewhistory.inputAppId' |
+								translate}}:
+							</span>{{data.eventId}}</td>
+						<td class="description-text" ><span>{{'viewhistory.description' | translate}}:
+							</span>{{data.description}}</td>
+						<td class="date-text">
+							{{data.timeStamp}}</td>
+						<td class="event-status-text">
+							{{data.eventStatus}}</td>
+					  </div>	
+					</mat-expansion-panel-header>
+					<p class="more-details-card">
+						<span id="reportDetails{{i}}" style="cursor:pointer;" (click)="reportDetails(data)"><img
+								src="assets\report.png" style="color: green;width: 15px; margin-bottom: -4px;">&nbsp;&nbsp;&nbsp;<span
+								style="color:#505050;" [style.font-size]="fontSize.breadcrumb">{{'viewhistory.reportIssueLabel' |
+								translate}}&nbsp;&nbsp;&nbsp;&nbsp;</span>|&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<span id="pinData{{i}}" style="cursor:pointer;" *ngIf="data.pinnedStatus === false"
+							(click)="pinData(data)"><img src="./assets/pin.png"
+								style="color: green;width: 8px;">&nbsp;&nbsp;&nbsp;<span
+								style="color:#505050;" [style.font-size]="fontSize.breadcrumb">{{'viewhistory.pinToTopLabel' |
+								translate}}&nbsp;&nbsp;&nbsp;&nbsp;</span>|&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<span id="unpinData{{i}}" style="cursor:pointer;" *ngIf="data.pinnedStatus === true"
+							(click)="unpinData(data)"><img src="./assets/pin.png"
+								style="color: green;width: 8px;">&nbsp;&nbsp;&nbsp;<span
+								style="color:#505050;" [style.font-size]="fontSize.breadcrumb">{{'viewhistory.unpinToToplabel' |
+								translate}}&nbsp;&nbsp;&nbsp;&nbsp;</span>|&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<span id="viewDetails{{i}}" style="cursor:pointer;" (click)="viewDetails(data)"><img
+								src="assets\view.png" style="color: green;width: 15px;">&nbsp;&nbsp;&nbsp;<span
+								style="color:#505050;" [style.font-size]="fontSize.breadcrumb">{{'viewhistory.viewhistoryLabel' |
+								translate}}</span></span>
+					</p>
+				</mat-expansion-panel>
+			</tr>
+		</table>
+		<div *ngIf="dataAvailable">
+			<h3>{{'viewhistory.noData' | translate}}</h3>
+		</div>
+		<div dir="ltr">
+			<span id="pageSizeOptions" *ngIf="this.totalItems !== 0">
+				<mat-paginator [style.font-size]="fontSize.breadcrumb" class="demo-paginator" #paginator  (page)="capturePageValue(pageEvent = $event)"
+					[length]="this.totalItems" [pageSize]="this.pageSize" [showFirstLastButtons]="showFirstLastButtons"
+					[pageSizeOptions]="this.pageSizeOptions" [pageIndex]="pageIndex" aria-label="Select page">
+				</mat-paginator>
+			</span>
+		</div>
+	</mat-card>
+</div>

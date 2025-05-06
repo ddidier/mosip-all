@@ -1,0 +1,210 @@
+.mat-select-panel {
+  position: absolute;
+  top: 32px;
+  left: 4px;
+  min-width: calc(100% + 22px) !important;
+  border-radius: 0px !important;
+  border: 1px solid blue;
+  border-top-style: none;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-start {
+  border-radius: 0px !important;
+  border: 1px solid blue !important;
+  border-right-style: none !important;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-end {
+  border-radius: 0px !important;
+  border: 1px solid blue !important;
+  border-left-style: none !important;
+}
+
+.mat-select-panel ng-animating {
+  visibility: hidden;
+}
+
+::ng-deep .successMsg-card {
+  width: 100%;
+  background: #E8FDF2 0% 0% no-repeat padding-box;
+  border: 1px solid #03A64A;
+  border-radius: 10px !important;
+  padding: 1.4rem;
+}
+
+.success-msg-description {
+  text-align: left;
+  letter-spacing: 0px;
+  color: #505050;
+  margin-left: 1.5rem;
+  font-size: 16px;
+  margin-top: 0px;
+}
+
+.success-msg-text {
+  letter-spacing: 0px;
+  color: #03A64A;
+  font-size: 21px;
+}
+
+.succcess-title-card {
+  display: flex;
+  align-items: center;
+}
+
+.transaction-title {
+  text-align: left;
+  font-size: 22px;
+  letter-spacing: 0px;
+  color: #505050;
+  margin-bottom: 0px;
+}
+
+.translation-details {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+}
+
+.translation-details-card {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-top: 14px;
+}
+
+.partner-logo {
+  border: 1px solid #909090;
+  height: 100px;
+  width: 100px;
+  border-radius: 5px;
+  margin-bottom: 0px;
+}
+
+.intro-description {
+  font-size: 16px;
+  letter-spacing: 0px;
+  color: #505050;
+}
+
+.attribute-card{
+  min-height: 210px;
+  border: 1px solid #505050; 
+  border-radius: 6px; 
+  padding: 12px;
+  overflow-wrap: break-word;
+  width: 99%; 
+}
+
+
+.purpose-input-box{
+  width:94%;
+  height: 100px;
+  resize: none;
+  font-family: Roboto,'Helvetica Neue',sans-serif;
+  padding: 5px;
+  border: none;
+  outline: none;
+}
+
+.share-btn{
+  background-color: #03A64A;
+  color: #ffffff;
+}
+
+.main-label{
+  color: #505050;
+}
+
+::ng-deep .mat-grid-tile .mat-figure{
+  align-items: baseline !important;
+  display: block !important;
+}
+
+.check-box-card{
+  display: flex;
+  align-items: center;
+}
+
+.check-box{
+  height: 17px;
+  width: 17px;
+  accent-color: #03A64A;
+  margin-right: 5px;
+}
+
+.each-property{
+  padding:10px 0 10px 0;
+  color: #505050;
+  width: 60%;
+  word-wrap: break-word;
+}
+table.fixed { 
+  table-layout:fixed; 
+}
+
+table.fixed td {
+  overflow:hidden;
+}
+
+.each-masked-property{
+  width:40%;
+  color: #505050;
+  font-size: 16px;
+  padding-left: 1.25rem;
+}
+
+.purpose-search-card{
+  border-radius: 4px !important;
+  padding: 3px; 
+  border: 1px solid #909090; 
+  display: flex;
+}
+
+button[disabled=disabled], button:disabled {
+  color:#505050 !important;
+}
+
+::ng-deep .mat-checkbox-disabled .mat-checkbox-label {
+  color: #505050;
+}
+
+::ng-deep .mat-menu-panel.each-lang-card{
+  min-height: 55px !important;
+  max-height: 200px !important;
+}
+
+::ng-deep .cdk-overlay-connected-position-bounding-box{
+  bottom: 30px !important;
+}
+
+.partner-label{
+  padding: 10px 0 3px 0;
+  font-size: 14px;
+}
+
+.sharing-purpose-label{
+  padding: 10px 0 3px 0;
+  font-size: 14px;
+}
+
+
+@media screen and (max-width:465px){
+  .each-property{
+      width: 65%;
+      padding:10px 0 10px 0;
+      color: #505050;
+  }
+  .each-masked-property{
+      width:40%;
+      color: #505050;
+      font-size: 16px;
+      padding-left: .5rem;
+  }
+  .mat-card{
+      padding: 5px;
+  }
+  .mat-button{
+      padding: 0;
+  }
+}

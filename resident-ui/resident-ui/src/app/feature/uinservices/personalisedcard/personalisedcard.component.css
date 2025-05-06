@@ -1,0 +1,114 @@
+.intro-description {
+    letter-spacing: 0px;
+    color: #505050;
+}
+
+.seleted-details-card {
+    min-height: 210px;
+    width: 100%;
+    border: 1px solid #505050;
+    border-radius: 6px;
+    padding: 12px;
+}
+
+.detailinfo{
+    color: #000000; 
+    font-weight: 400; 
+    font-size: 14px;
+}
+
+tr {
+    word-break: break-word;
+}
+
+/*@media screen and (max-width:1480px) {
+    .seleted-details-card{ 
+        width: 70%;
+    }
+}*/
+.download-btn {
+    background-color: #03A64A;
+    color: #ffffff;
+}
+
+::ng-deep .mat-grid-tile .mat-figure {
+    align-items: baseline !important;
+    display: block !important;
+}
+
+.check-box-card {
+    display: flex;
+    align-items: center;
+}
+
+.check-box {
+    height: 17px;
+    width: 17px;
+    accent-color: #03A64A;
+    margin-right: 5px;
+}
+
+.each-property{
+    padding:10px 0 10px 0;
+    color: #505050;
+    width: 60%;
+    word-wrap: break-word;
+}
+table.fixed { 
+    table-layout:fixed; 
+}
+
+table.fixed td {
+    overflow:hidden;
+}
+
+.each-masked-property{
+    width:40%;
+    color: #505050;
+    font-size: 16px;
+    padding-left: 1.25rem;
+}
+
+.image-icon-ara{
+    float: left !important;
+}
+.image-icon{
+    float: right !important;
+}
+
+button[disabled=disabled], button:disabled {
+    color:#505050 !important;
+}
+
+::ng-deep .mat-checkbox-disabled .mat-checkbox-label {
+    color: #505050;
+}
+
+::ng-deep .mat-menu-panel.each-lang-card{
+    min-height: 55px !important;
+    max-height: 200px !important;
+}
+
+::ng-deep .cdk-overlay-connected-position-bounding-box{
+    bottom: 0px !important;
+}
+
+@media screen and (max-width:465px){
+    .each-property{
+        width: 65%;
+        padding:10px 0 10px 0;
+        color: #505050;
+    }
+    .each-masked-property{
+        width:40%;
+        color: #505050;
+        font-size: 16px;
+        padding-left: .5rem;
+    }
+    .mat-card{
+        padding: 5px;
+    }
+    .mat-button{
+        padding: 0;
+    }
+}

@@ -1,0 +1,31 @@
+<div class="main-container" >
+  <span class="breadcrumb" [style.font-size]="fontSize.breadcrumb">
+    <a (click)="onItemSelected('home')">{{'downloadUin.home' | translate}} &nbsp;&nbsp;</a> >&nbsp;&nbsp;<a (click)="onItemSelected('home')">{{'uinservices.label' | translate}} </a> &nbsp;&nbsp;> &nbsp;&nbsp;<span class="active">{{'downloadUin.label' | translate}}</span>
+  </span>
+  <div class="spinner" *ngIf="isLoading">
+		<mat-spinner></mat-spinner>
+   </div>
+  <mat-card class="uin-appointment-card" *ngIf="downloadUinData && !isLoading">
+    <button [style.font-size]="fontSize.paragraph" mat-button-toggle id="getUinBackBtn" (click)="onItemSelected('back')" class="book-appointment-back-btn"><img src="./assets/images/arrow_back_black_24dp.png"
+        alt="" />Back</button>
+    <hr class="line" />
+    <div class="otp-verify-container">
+      <mat-card-subtitle [style.font-size]="fontSize.paragraph" *ngIf="resetBtnDisable" class="otp-time-heading">{{downloadUinData.subTitle}}<span class="otp-expire-time"> 0{{otpTimeMinutes}}:{{displaySeconds}}</span></mat-card-subtitle>
+      <mat-card-subtitle [style.font-size]="fontSize.paragraph" *ngIf="!resetBtnDisable" class="otp-time-heading">{{downloadUinData.subTitle2}}</mat-card-subtitle>
+      <!-- <label for="otp-input">{{downloadUinData.inputLabel }}</label> -->
+      <!-- <br /> -->
+      <input id="getUinOtpValue" [style.font-size]="fontSize.paragraph" #box (input)="captureValue(box.value)" [placeholder]="downloadUinData.enterOtp" id="otp-input" class="enter-opt-input" type="text" />
+      <div class="otp-infromation-card" >
+        <p [style.font-size]="fontSize.paragraph" class="otp-infromation-text">{{downloadUinData.otpDescription}} <span
+            class="mobile-number"> {{phoneNumber}}</span> {{downloadUinData.otpDescriptionEmail}} <span
+            class="mobile-number"> {{emailId}}</span>.</p>
+      </div>
+      <div class="get-uin-btn-card">
+        <button [style.font-size]="fontSize.paragraph" [disabled]="resetBtnDisable" mat-button-toggle id="getUinResendOtpBtn" (click)="resendOtp()" mat-raised-button class="button">{{downloadUinData.resendBtnLabel}}</button>
+        &nbsp;
+        &nbsp;
+        <button [style.font-size]="fontSize.paragraph" [disabled]="submitBtnDisable" mat-button-toggle id="getUinsubmitBtn" (click)="submitOtp()" mat-raised-button class="button">{{downloadUinData.submitBtnLabel}}</button>
+      </div>
+    </div>
+  </mat-card>
+</div>

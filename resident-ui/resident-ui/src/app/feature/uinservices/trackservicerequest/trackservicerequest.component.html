@@ -1,0 +1,159 @@
+<span class="breadcrumb" [style.font-size]="fontSize.breadcrumb">
+	<a (click)="onItemSelected('uinservices/dashboard')">{{'dashboard.uinservices' | translate}} &nbsp;&nbsp;</a> >
+	&nbsp;<a (click)="onItemSelected('uinservices/viewhistory')" *ngIf="source">{{"trackservicerequest.source" | translate}}&nbsp;&nbsp;></a> 
+	&nbsp;&nbsp;<span class="active">{{'trackservicerequest.title' | translate}}</span>
+</span>
+
+<div class="main-div" *ngIf="langJSON">
+	<mat-card class="mat-card">
+		<table style="width: 100%;">
+			<tr>
+				<td style="padding: 5px;"><h3 [style.font-size]="fontSize.headingForUIN" style=" color:#505050; margin: 0px;">{{'trackservicerequest.title' | translate}}</h3></td>
+			</tr>
+			<tr>
+				<td [style.font-size]="fontSize.paragraph" style="color: #909090;">
+					{{'trackservicerequest.descriptionText' | translate}}
+				</td>
+			</tr>
+			<tr>
+				<td style="padding: 10px;">
+					<label [style.font-size]="fontSize.breadcrumb" class="label-card">{{'trackservicerequest.searchLabel' | translate}}<span
+							style="color: #FF0000; margin-bottom:8px;">*</span>
+						<mat-icon #tooltip="matTooltip" [matTooltip]="infoText" matTooltipPosition="below" matTooltipClass="below" class="info-icon">info</mat-icon>
+					</label>
+					<div class="event-id-search-main-card">
+						<span class="event-id-search-card">
+						  <input [style.font-size]="fontSize.breadcrumb" class="input" style="outline: none; border: none;" type="text" id="appIdValue" name="appIdValue" value={{eidVal}}
+						  (input)="captureValue($event)"
+						  (blur)="captureValue($event)"
+                          (focus)="captureVirtualKeyboard(search, 0)" 
+						  #keyboardRef
+						  type="number"
+						  placeholder="{{'trackservicerequest.searchPlaceholder' | translate}}" />
+						  <em style="float: right; color: grey; cursor: pointer;" matSuffix class="material-icons" (click)="openKeyboard()">keyboard</em>
+					    </span>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<button [style.font-size]="fontSize.paragraph" [disabled]="disableTrackBtn" id="getEIDStatusbtn" mat-raised-button class="track-btn"
+						(click)="getEIDStatusByInput()">{{'trackservicerequest.searchButton' | translate}}</button>
+					</div>
+					<p *ngIf="showWarningMessage" [style.font-size]="fontSize.warningMessages" class="warning-message">{{'trackservicerequest.warningMsg' | translate}}</p>
+				</td>
+			</tr>
+		</table>
+		<div class="spinner spinner2" *ngIf="isLoading">
+			<mat-spinner></mat-spinner>
+	   </div>
+	   <div *ngIf="!isLoading" style="padding: 8px;">
+		<div *ngIf="eidStatus" class="trackDetails">
+			<table style="width: 100%; border-radius: 10px; border-collapse: collapse;">
+				<tr colspan="1" [style.font-size]="fontSize.breadcrumb">
+					<td style="width:25%"><label>{{'trackservicerequest.eventId' | translate}}</label></td>
+					<td style="width:25%"><label>{{'trackservicerequest.eventType' | translate}}</label></td>
+					<!-- <td style="width:25%"><label>{{'trackservicerequest.description' | translate}}</label></td> -->
+					<td style="width:25%"><label>{{'trackservicerequest.eventStatus' | translate}}</label></td>
+					<td style="width:25%"><label>{{'trackservicerequest.timestamp' | translate}}</label></td>
+				</tr>
+				<tr style="border-bottom: 1px solid silver;" [style.font-size]="fontSize.paragraph">
+					<td style="width:25%">{{eidStatus.eventId}}</td>
+					<td style="width:25%">{{eidStatus.eventType}}</td>
+					<!-- <td style="width:25%">{{eidStatus.info.description}}</td> -->
+					<td style="width:25%">{{eidStatus.eventStatus}}</td>
+					<td style="width:25%">{{eidStatus.timestamp}}</td>
+				</tr>
+				<tr style="padding:10px;" [style.font-size]="fontSize.breadcrumb">
+					<td style="width:25%"><label>{{'trackservicerequest.individualId' | translate}}</label></td>
+					<!-- <td style="width:25%"><label>{{'trackservicerequest.summary' | translate}}</label></td> -->
+					<!-- <td style="width:25%"><label>{{'trackservicerequest.timestamp' | translate}}</label></td> -->
+					<td style="width:25%"><label>{{'trackservicerequest.authenticationMode' | translate}} </label></td>
+					<td style="width:25%"><label>{{'trackservicerequest.summary' | translate}}</label></td>
+				</tr>
+				<tr style="padding:10px;" [style.font-size]="fontSize.paragraph">
+					<td style="width:25%">{{eidStatus.individualId}}</td>
+					<!-- <td style="width:25%">{{eidStatus.summary.replace("$attributes",eidStatus.info.attributeList)}}</td> -->
+					<!-- <td style="width:25%">{{eidStatus.timestamp}}</td> -->
+					<td style="width:25%">{{eidStatus.info.authenticationMode}}</td>
+					<td style="width:25%">{{eidStatus.summary.replace("$attributes",eidStatus.info.attributeList)}}</td>
+
+				</tr>
+				<!-- Download Personalized Card and Update my data -->
+				<tr [style.font-size]="fontSize.breadcrumb" *ngIf="eidStatus.info.eventTypeEnum === 'DOWNLOAD_PERSONALIZED_CARD' || eidStatus.info.eventTypeEnum === 'UPDATE_MY_UIN' "
+					style="padding:10px; border-top: 1px solid silver;">
+					<td><label>{{'trackservicerequest.attributeList' | translate}} </label></td>
+				</tr>
+				<tr [style.font-size]="fontSize.paragraph" *ngIf="eidStatus.info.eventTypeEnum === 'DOWNLOAD_PERSONALIZED_CARD' || eidStatus.info.eventTypeEnum === 'UPDATE_MY_UIN' ">
+					<td>{{eidStatus.info.attributeList}}</td>
+				</tr>
+				<!-- Authentication Request -->
+				<tr [style.font-size]="fontSize.breadcrumb" *ngIf="eidStatus.info.eventTypeEnum === 'AUTHENTICATION_REQUEST' "
+					style="padding:10px; border-top: 1px solid silver;">
+					<td><label>{{'trackservicerequest.partnerLogo' | translate}} </label></td>
+					<td><label>{{'trackservicerequest.partnerName' | translate}} </label></td>
+				</tr>
+				<tr [style.font-size]="fontSize.paragraph" *ngIf="eidStatus.info.eventTypeEnum === 'AUTHENTICATION_REQUEST' ">
+					<td><img alt="logo" style="width:130px;height: 60px;" [src]=eidStatus.info.partnerLogo /></td>
+					<td>{{eidStatus.info.partnerName}}</td>
+				</tr>
+				<!-- Manage my VID	 -->
+				<tr [style.font-size]="fontSize.breadcrumb" *ngIf="eidStatus.info.eventTypeEnum === 'GENERATE_VID' "
+					style="padding:10px; border-top: 1px solid silver;">
+					<td><label>{{'trackservicerequest.vidType' | translate}} </label></td>
+					<td><label>{{'trackservicerequest.vid' | translate}} </label></td>
+				</tr>
+				<tr [style.font-size]="fontSize.paragraph" *ngIf="eidStatus.info.eventTypeEnum === 'GENERATE_VID' ">
+					<td>{{eidStatus.info.vidType}}</td>
+					<td>{{eidStatus.info.vid}}</td>
+				</tr>
+				<!-- Share credential with partner	 -->
+				<tr [style.font-size]="fontSize.breadcrumb" *ngIf="eidStatus.info.eventTypeEnum === 'SHARE_CRED_WITH_PARTNER' "
+					style="padding:10px; border-top: 1px solid silver;">
+					<td style="width:25%"><label>{{'trackservicerequest.partnerLogo' | translate}} </label></td>
+					<td style="width:25%"><label>{{'trackservicerequest.partnerName' | translate}} </label></td>
+					<td style="width:25%"><label>{{'trackservicerequest.attributeList' | translate}} </label></td>
+					<td style="width:25%"><label>{{'trackservicerequest.purpose' | translate}} </label></td>
+				</tr>
+				<tr [style.font-size]="fontSize.paragraph" *ngIf="eidStatus.info.eventTypeEnum === 'SHARE_CRED_WITH_PARTNER' ">
+					<td style="width:25%"><img alt="logo" style="width:130px;height: 60px;" [src]=eidStatus.info.partnerLogo /></td>
+					<td style="width:25%">{{eidStatus.info.partnerName}}</td>
+					<td style="width:25%">{{eidStatus.info.attributeList}}</td>
+					<td style="width:25%">{{eidStatus.info.purpose}}</td>
+				</tr>
+			</table>
+			<div *ngIf="eidStatus.info.eventTypeEnum === 'UPDATE_MY_UIN'"
+				style="display: flex; justify-content: space-between; width: 100%; margin-top: 1rem;">
+				<div>
+				<button [style.font-size]="fontSize.paragraph" mat-raised-button id="downloadCardWithNewDataBtn" [disabled]="eidStatus.info.downloadLink === 'NA' || disableDownloadVidBtn" *ngIf="eidStatus.info.eventStatusEnum === 'SUCCESS'" (click)="downloadVIDCard(eidStatus.eventId)" class="download-btn"><img
+						class="save-icon"
+						src="./assets/images/save.png" />{{'trackservicerequest.downloadUINCard' |
+					translate}}</button>
+				</div>
+				<button [style.font-size]="fontSize.paragraph" id="downloadAcknowledgementbtn" style="cursor: pointer;" class="download-btn"
+				    (click)="downloadAcknowledgement()"><img class="save-icon"
+						src="./assets/images/save.png" alt=""/>{{'trackservicerequest.downloadbuttonLabel' |
+					translate}}</button>
+			</div>
+			<div *ngIf="eidStatus.info.eventTypeEnum === 'VID_CARD_DOWNLOAD' "
+				style="display: flex; justify-content: space-between; width: 100%; margin-top: 1rem;">
+				<div>
+				<button [style.font-size]="fontSize.paragraph" mat-raised-button [disabled]="eidStatus.info.downloadLink === 'NA' || disableDownloadVidBtn" *ngIf="eidStatus.info.eventStatusEnum === 'SUCCESS'" (click)="downloadVIDCard(eidStatus.eventId)" id="downloadCardWithNewDataBtn" class="download-btn"><img
+						class="save-icon"
+						src="./assets/images/save.png" />{{'trackservicerequest.downloadVIDCard' |
+					translate}}</button>
+				</div>
+				<button [style.font-size]="fontSize.paragraph" id="downloadAcknowledgementbtn" style="cursor: pointer;" class="download-btn"
+					(click)="downloadAcknowledgement()"><img class="save-icon"
+						src="./assets/images/save.png" alt=""/>{{'trackservicerequest.downloadbuttonLabel' |
+					translate}}</button>
+			</div>
+			<div *ngIf="eidStatus.info.eventTypeEnum !== 'UPDATE_MY_UIN' && eidStatus.info.eventTypeEnum !== 'VID_CARD_DOWNLOAD' "
+				style="display: flex; justify-content: flex-end; width: 100%; margin-top: 1rem;">
+				<button [style.font-size]="fontSize.paragraph" id="downloadAcknowledgementbtn" style="cursor: pointer;" class="download-btn"
+					(click)="downloadAcknowledgement()"><img class="save-icon"
+						src="./assets/images/save.png" alt=""/>{{'trackservicerequest.downloadbuttonLabel' |
+					translate}}</button>
+			</div>
+
+		</div>
+		<P [style.font-size]="fontSize.paragraph" *ngIf="eidStatus">{{'trackservicerequest.raiseSupportRequest' | translate}} <span id="raiseSupportLink" class="click-here" (click)="navigateGrievance(eidStatus.eventId)">{{'trackservicerequest.clickHere' | translate}}</span></P>
+	</div>
+	</mat-card>
+</div>

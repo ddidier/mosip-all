@@ -1,0 +1,20 @@
+<span class="breadcrumb" [style.font-size]="fontSize.breadcrumb">
+	<span class="active">{{'dashboard.uinservices' | translate}}</span>
+</span>
+<div class="main-div" dir="{{sitealignment}}">
+	<mat-card class="main-card">
+		<h2 [style.font-size]="fontSize.heading" class="uin-heading">{{'dashboard.uinservices' | translate}}</h2>
+		<mat-card-subtitle [style.font-size]="fontSize.paragraph"
+			class="services-description">{{'dashboard.uindescription' | translate}}</mat-card-subtitle>
+		<div *ngIf="menuItems" class="uin-service-card">
+			<div class="each-service-card" *ngFor="let item of menuItems[0].subMenus">
+				<mat-card class="mini-card" (click)="onItemSelected(item.route)" [id]="item.route">
+					<span><img mat-card-xs-image [src]=item.icon alt=""/></span>
+					<mat-card-title class="uin-services-heading" [style.font-size]="fontSize.headingForUIN">{{item.displayName}}</mat-card-title>
+					<mat-card-subtitle [style.font-size]="fontSize.paragraph"
+						class="services-description">{{item.description}}</mat-card-subtitle>
+				</mat-card>
+			</div>
+		</div>
+	</mat-card>
+</div>

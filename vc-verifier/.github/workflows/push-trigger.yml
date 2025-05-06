@@ -1,0 +1,43 @@
+name: Maven Package upon a push
+
+on:
+  release:
+    types: [published]
+  pull_request:
+    types: [opened, reopened, synchronize]
+  workflow_dispatch:
+    inputs:
+      message:
+        description: 'Message for manually triggering'
+        required: false
+        default: 'Triggered for Updates'
+        type: string
+  push:
+    branches:
+      - '!release-branch'
+      - 'release*'
+      - 'injimob*'
+      - 'develop'
+      - 'master'
+
+jobs:
+  build-maven-vc-verifier:
+    uses: mosip/kattu/.github/workflows/gradle-build.yml@master
+
+    with:
+      SERVICE_LOCATION: vc-verifier/kotlin/vcverifier
+      JAVA_VERSION: 17
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_INJI_TEAM }}
+
+  sonar_analysis:
+    needs: build-maven-vc-verifier
+    if: "${{  github.event_name != 'pull_request' }}"
+    uses: mosip/kattu/.github/workflows/gradlew-sonar-analysis.yml@master-java21
+    with:
+      SERVICE_LOCATION: vc-verifier/kotlin/vcverifier
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_ORGANIZATION: ${{ secrets.ORG_KEY }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_INJI_TEAM }}
+

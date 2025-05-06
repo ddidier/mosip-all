@@ -1,0 +1,75 @@
+<div class="main-container">
+  <span class="breadcrumb" [style.font-size]="fontSize.breadcrumb">
+    <a (click)="onItemSelected('home')">{{'dashboard.home' | translate}} &nbsp;&nbsp;</a> >&nbsp;&nbsp;<span
+      class="active">{{'dashboard.verify' | translate}}</span>
+  </span>
+  <mat-card class="verify-phnumb-email-card" *ngIf="!showOtpPanel">
+    <div class="send-otp-container" [style.width] = "width" *ngIf="verifyChannelData">
+      <div class="btn-card" [ngClass]="deviceSize !== 'XSmall' ? 'btn-card' : 'btn-card-xs'">
+        <mat-button-toggle [style.font-size]="fontSize.paragraph" id="phoneChannelBtn" (click)="radioChange('PHONE')" class="button"
+          [style.borderColor]="numBtnColors"><img style="margin: 0 5px;" *ngIf="!phoneIcon"
+            src="./assets/images/phone_iphone_black_24dp.png" /><img style="margin: 0 5px;" *ngIf="phoneIcon"
+            src="./assets/icons/iconfont/phone_iphone_black.svg" /><span
+            [style.color]="numBtnColors">{{verifyChannelData.mobileno |
+            translate}}</span>
+        </mat-button-toggle>
+        <mat-button-toggle [style.font-size]="fontSize.paragraph" id="emailChannelBtn" [style.borderColor]="emailBtnColors" (click)="radioChange('EMAIL')"
+          class="button"><img style="margin: 0 5px;" src="./assets/images/email_black_24dp (1).png" *ngIf="!mailIcon" /> <img style="margin: 0 5px;" *ngIf="mailIcon"
+            src="./assets/icons/iconfont/email_black.svg" /><span
+            [style.color]="emailBtnColors">{{verifyChannelData.email | translate}}</span>
+        </mat-button-toggle>
+      </div>
+      <div class="uin-login-title-card" for="uin" [style.font-size]="fontSize.paragraph">{{verifyChannelData.uid | translate }}
+        <mat-icon class="info-icon" #tooltip="matTooltip" [matTooltip]="infoText" matTooltipPosition="below" matTooltipClass="left">info</mat-icon>
+      </div>
+      <input [style.font-size]="fontSize.paragraph" id="uidValue" type="text" id="uin" name="uin" (input)="captureValue($event, 'individualId')" (keypress)="isNumberKey($event)"
+        value={{individualId}} placeholder="{{verifyChannelData.uid | translate}}" style="padding: 6px 10px;"/>
+      <div class="not-robot-verifing-card" *ngIf="siteKey && captchaEnable">
+        <app-captcha [captchaSiteKey]="siteKey" [resetCaptcha]="resetCaptcha"
+          (captchaEvent)="getCaptchaToken($event)"></app-captcha>
+      </div>
+      &nbsp;
+      &nbsp;
+      &nbsp;
+      <button [style.font-size]="fontSize.paragraph" id="sendOtpBtn" class="send-otp-btn" [disabled]="disableSendOtp" mat-raised-button
+        (click)="sendOtpBtn()">{{verifyChannelData.sendotp | translate}}</button>
+    </div>
+  </mat-card>
+
+
+  <!-- showOtpPanel -->
+
+
+  <mat-card class="show-opt-panel-card" *ngIf="showOtpPanel">
+    <button [style.font-size]="fontSize.paragraph" id="backBtn" (click)="onItemSelected('back')" class="book-appointment-back-btn"><img
+        src="./assets/images/arrow_back_black_24dp.png" alt="" />{{verifyChannelData.back}}</button>
+    <div class="send-otp-container">
+      <mat-card-subtitle [style.font-size]="fontSize.paragraph" *ngIf="resetBtnDisable" class="otp-time-heading">{{verifyChannelData.subTitle | translate}}<span
+          class="otp-expire-time">
+          0{{otpTimeMinutes}}:{{displaySeconds}}</span>
+      </mat-card-subtitle>
+      <mat-card-subtitle [style.font-size]="fontSize.paragraph" *ngIf="!resetBtnDisable" class="otp-time-heading">{{verifyChannelData.subTitle2}}</mat-card-subtitle>
+      <label [style.font-size]="fontSize.warningMessages" for="otp-input" class="label-for-otp">{{verifyChannelData.inputLabel | translate}}</label>
+      <br />
+      <input [style.font-size]="fontSize.breadcrumb" id="otpValue" #box [value]="otp" [disabled]="inputDisabled" (keyup)="captureOtpValue(box.value)" placeholder="{{verifyChannelData.inputLabel}}" id="otp-input"
+        class="enter-opt-input" type="text" />
+      <div class="otp-infromation-card">
+        <p [style.font-size]="fontSize.paragraph" *ngIf="otpChannel[0] === 'PHONE'" class="otp-infromation-text">{{verifyChannelData.otpDescriptionPhone |
+          translate}} <span class="mobile-number">
+            {{channelType}}</span>.</p>
+        <p *ngIf="otpChannel[0] === 'EMAIL'" class="otp-infromation-text">{{verifyChannelData.otpDescriptionEmail |
+          translate}} <span class="mobile-number">
+            {{channelType}}</span>.</p>
+      </div>
+      <div class="get-uin-btn-card">
+        <button [style.font-size]="fontSize.paragraph" id="resendOtpBtn" mat-raised-button [disabled]="resetBtnDisable" readonly="true" (click)="resendOtp()"
+          class="button2">{{verifyChannelData.resendBtnLabel |
+          translate}}</button>
+        &nbsp;
+        &nbsp;
+        <button [style.font-size]="fontSize.paragraph" id="submitOtpBtn" mat-raised-button [disabled]="submitBtnDisable" (click)="submitOtp()"
+          class="button2">{{verifyChannelData.submitBtnLabel | translate}}</button>
+      </div>
+    </div>
+  </mat-card>
+</div>

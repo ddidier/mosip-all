@@ -1,0 +1,141 @@
+<span class="breadcrumb" [style.font-size]="fontSize.breadcrumb">
+	<!-- <a (click)="onItemSelected('dashboard')">{{'dashboard.home' | translate}} &nbsp;&nbsp;</a> > &nbsp;&nbsp; -->
+	<a (click)="onItemSelected('uinservices/dashboard')">{{'dashboard.uinservices' | translate}} &nbsp;&nbsp;</a> >
+	&nbsp;&nbsp;<span class="active">{{'sharewithpartner.title' | translate}}</span>
+</span>
+
+<div class="main-div">
+	<div class="spinner" *ngIf="isLoading">
+		<mat-spinner></mat-spinner>
+	</div>
+	<mat-card *ngIf="!isLoading">
+		<h3 [style.font-size]="fontSize.headingForUIN" style="color: #050505;">{{'sharewithpartner.title' | translate}}</h3>
+		<p [style.font-size]="fontSize.paragraph" class="intro-description">{{'sharewithpartner.introDescription' | translate}}</p>
+		<label [style.font-size]="fontSize.paragraph" class="main-label">{{'sharewithpartner.mainlabel' |
+			translate}}</label>
+		<table style="width:100%;" dir="{{sitealignment}}">
+			<tr><mat-grid-list [cols]="cols" rowHeight="10rem" gutterSize="10px">
+				<mat-grid-tile [colspan]="dataCols" [rowspan]="dataRow">
+						<td >
+							<table class="fixed" *ngFor="let data of schema; let i = index" style="width:100%;">
+								<tr>
+									<td [style.font-size]="fontSize.checkBoxText" class="each-property" style="width:40%;">
+										<mat-checkbox [checked]="data.checked" [id]="data.attributeName"
+											(click)="captureCheckboxValue($event, data, 'datacheck')">{{data.label[langCode]}}
+										</mat-checkbox>
+									</td>
+									<td [style.font-size]="fontSize.checkBoxText" *ngIf="data.maskRequired" class="each-masked-property" style="width:60%;">
+										<mat-checkbox [disabled]="!data.checked"
+											id="mask{{data.attributeName}}"
+											(click)="captureCheckboxValue($event, data, data.maskAttributeName)">
+											{{data.maskRequiredLabel[langCode]}}</mat-checkbox>
+									</td>
+									<td *ngIf="data.formatRequired" style="width:60%;">
+										<button [style.font-size]="fontSize.checkBoxText" [disabled]="!data.checked" id="matIcon" mat-button
+											[matMenuTriggerFor]="basic">{{data.formatOptionLabel[langCode]}}
+											<mat-icon>keyboard_arrow_down</mat-icon>
+										</button>
+										<mat-menu #basic="matMenu" class="each-lang-card">
+											<ng-container *ngFor="let data1 of data.formatOption[langCode];">
+												<button [style.font-size]="fontSize.checkBoxText" id="{{data1.value}}Btn" mat-menu-item>
+													<div class="check-box-card" (click)="captureCheckboxValue($event, data,data1)">
+														<input class="check-box" type="checkbox" [checked]="data1.checked"
+															id="{{data1.value}}" />
+														<label>{{data1.label}}</label>
+													</div>
+												</button>
+											</ng-container>
+										</mat-menu>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</mat-grid-tile>
+					<mat-grid-tile [colspan]="previewCols" [rowspan]="previewRow">
+						<td  [style.width]="previewWidth">
+							<div class="attribute-card" >
+									<table  style="min-width: 100%; max-height: 217px;">
+										<tr style="word-break: break-word;">
+											<td rowspan='2' *ngIf="sharableAttributes['photo']"><img [src]="sharableAttributes['photo']['value']" alt='' width='70px' height='70px' /></td>
+											<td>
+											   <span *ngIf="sharableAttributes['fullName']">
+												  <label [style.font-size]="fontSize.breadcrumb" style="color: #666666;">{{sharableAttributes['fullName']['label']}}</label><br><span [style.font-size]="fontSize.paragraph" style="color: #000000; font-weight: 400;">{{sharableAttributes['fullName']['value']}}</span>
+											   </span>
+											</td>
+											<td [ngStyle]="{'float': langCode === 'ara' ? 'left' : 'right' }"><img style="height: 50px; width: 50px;" alt="logo" src="/assets/MOSIP Vertical Black.png"/></td>
+										</tr>
+										<tr *ngIf="sharableAttributes['dateOfBirth'] || sharableAttributes['gender']" style="word-break: break-word;">
+											<td *ngIf="sharableAttributes['dateOfBirth']" colspan='1'><label [style.font-size]="fontSize.breadcrumb" style="color: #666666;">{{sharableAttributes['dateOfBirth']['label']}}</label><br><span [style.font-size]="fontSize.paragraph" style="color: #000000; font-weight: 400;">{{sharableAttributes['dateOfBirth']['value']}}</span></td>
+											<td *ngIf="sharableAttributes['gender']"><label [style.font-size]="fontSize.breadcrumb" style="color: #666666;">{{sharableAttributes['gender']['label']}}</label><br> <span [style.font-size]="fontSize.paragraph" style="color: #000000; font-weight: 400;">{{sharableAttributes['gender']['value']}}</span></td>
+										</tr>
+										<tr *ngIf="sharableAttributes['UIN'] || sharableAttributes['perpetualVID']" style="word-break: break-word;">
+											<td *ngIf="sharableAttributes['UIN']" ><label [style.font-size]="fontSize.breadcrumb" style="color: #666666;">{{sharableAttributes['UIN']['label']}}</label><br><span [style.font-size]="fontSize.paragraph" style="color: #000000; font-weight: 400;">{{sharableAttributes['UIN']['value']}}</span></td>
+											<td *ngIf="sharableAttributes['perpetualVID']"><label [style.font-size]="fontSize.breadcrumb" style="color: #666666;">{{sharableAttributes['perpetualVID']['label']}}</label><br><span [style.font-size]="fontSize.paragraph" style="color: #000000; font-weight: 400;">{{sharableAttributes['perpetualVID']['value']}}</span></td>
+										</tr>
+										<tr *ngIf="sharableAttributes['phone']" style="word-break: break-word;">
+											<td  colspan='3'><label [style.font-size]="fontSize.breadcrumb" style="color: #666666;">{{sharableAttributes['phone']['label']}}</label><br><span [style.font-size]="fontSize.paragraph" style="color: #000000; font-weight: 400;">{{sharableAttributes['phone']['value']}}</span></td>
+										</tr>
+										<tr *ngIf="sharableAttributes['email']" style="word-break: break-word;">
+											<td colspan='3' >
+												<label [style.font-size]="fontSize.breadcrumb" style="color: #666666;">{{sharableAttributes['email']['label']}}</label><br><span [style.font-size]="fontSize.paragraph" style="color: #000000; font-weight: 400;">{{sharableAttributes['email']['value']}}</span>
+											</td>
+										</tr>
+										<tr *ngIf="sharableAttributes['fullAddress']" style="word-break: break-word;">
+											<td colspan='3'><label [style.font-size]="fontSize.breadcrumb" style="color: #666666;">{{sharableAttributes['fullAddress']['label']}}</label><br><span [style.font-size]="fontSize.paragraph" style="color: #000000; font-weight: 400;">{{sharableAttributes['fullAddress']['value']}}</span></td>
+										</tr>
+								</table>
+							</div>
+							<table [style.width]="previewWidth">
+								<tr>
+									<td class="partner-label">
+										<mat-label [style.fontSize]="fontSize.lableText">{{'sharewithpartner.partnerName' | translate}}<span
+												style="color: red;">*</span></mat-label>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<mat-select [style.fontSize]="fontSize.lableText" (selectionChange)="captureDropDownValue($event)" class="enable-dropdown" id="partnerDetails">
+											<mat-option 
+											    *ngFor="let partnerDetail of partnerDetails; let i = index"
+												id="partner{{i}}" [value]="partnerDetail.partnerID">
+												{{partnerDetail.organizationName}}</mat-option>
+										</mat-select>
+									</td>
+								</tr>
+								<tr>
+									<td class="sharing-purpose-label">
+										<mat-label [style.fontSize]="fontSize.lableText">{{'sharewithpartner.sharingReason' | translate}}<span
+												style="color: red;">*</span></mat-label>
+									</td>
+								</tr>
+								<tr>
+									<td>
+									<span class="purpose-search-card" >
+										<textarea [style.fontSize]="fontSize.lableText" [attr.maxlength]="totalCommentCount" 
+											id="sharingReasonPlaceholder" class="purpose-input-box" matInput
+											placeholder="{{'sharewithpartner.sharingReasonPlaceholder' | translate}}"
+											(input)="getpurpose($event)"
+											(blur)="getpurpose($event)"
+                                            (focus)="captureVirtualKeyboard(search, 0)" #keyboardRef></textarea>
+											<em style="float: right; color: grey; cursor: pointer;" matSuffix class="material-icons" (click)="openKeyboard()">keyboard</em>
+										</span>
+											<span [style.fontSize]="fontSize.breadcrumb"
+											style="color:red; display: block;">{{'sharewithpartner.TotalCharacters'
+											| translate}}: {{totalCommentCount}}</span>
+										<span [style.fontSize]="fontSize.breadcrumb"
+											style="color:red; font-size: 12px; display: block;">{{'sharewithpartner.remainingCharacters'
+											| translate}}: {{remainingChars}}</span>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</mat-grid-tile></mat-grid-list>
+			</tr>
+			<tr>
+				<td style="float:right;width: 100%" colspan="2"><button [style.fontSize]="fontSize.paragraph" id="shareBtn" [disabled]="shareBthDisabled"
+						mat-raised-button class="share-btn" (click)="shareInfoBtn()">{{'sharewithpartner.sharebutton' |
+						translate}}</button></td>
+			</tr>
+		</table>
+	</mat-card>
+</div>

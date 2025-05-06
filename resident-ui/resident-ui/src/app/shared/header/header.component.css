@@ -1,0 +1,225 @@
+.mat-drawer-container{
+  z-index: 2;
+}
+.mat-sidenav-container {
+  height: 5em;
+  background: white;
+  margin-bottom: 2em;  
+}
+.mat-sidenav {
+  width: 180px;
+}
+.mat-toolbar {
+  top: 0;
+  position: fixed;
+  z-index: 999;
+  background: #464A8C 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 10px #00000029;
+  opacity: 1;
+  border-width: 1px;
+  overflow-x: hidden;
+  width: 100%;
+  height: 82px;
+  padding: 0px 2vw;
+  overflow: hidden;
+}
+
+.header--logo {
+  vertical-align: middle;
+  cursor: pointer;
+  /* UX enhancement */
+  padding-left: 4%;
+  /* UX enhancement end */
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+.list-item > .mat-list-item {
+  color: #fff !important;
+  font-size: 12px !important;
+  line-height: 1.42857143 !important;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif;
+  font-weight: 200;
+}
+.list-item {
+  display: inline-flex;
+  padding: 0px;
+  margin-left: 25px;
+}
+.icon {
+  color: #fff !important;
+}
+.sidenav-list > .mat-list-item {
+  color: black;
+  text-transform: uppercase;
+  font-size: 12px !important;
+  line-height: 1.42857143 !important;
+  letter-spacing: 2px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.header__actions {
+  text-transform: none !important;
+}
+
+@media (min-width: 670px) {
+  .sidenav-button {
+    display: none;
+  }
+}
+@media (max-width: 670px) {
+  .list-item {
+    display: none;
+  }
+}
+
+.mat-button-wrapper{
+  color: white;
+}
+
+
+.mat-menu-content:not(:empty) {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+::ng-deep .mat-menu-content {
+  /* width: 250px !important; */
+  /* height: auto !important; */
+  padding-top: 0px !important;
+  /* padding-bottom: 0px !important; */
+}
+
+.mat-menu-item {
+  overflow-wrap: break-word;
+  /* height: 40px; */
+}
+
+
+::ng-deep .mat-menu-panel.myMenu {
+  height: 80%;
+  min-width: 303px !important;
+  border-radius: 0% !important;
+  background-color: white;
+  font-size: 13px;
+  padding-bottom: 12px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+::ng-deep .first+.cdk-overlay-connected-position-bounding-box{
+  right: 5px !important;
+  width:auto !important;
+}
+
+::ng-deep .zoom+.cdk-overlay-connected-position-bounding-box{
+  right: auto !important;
+}
+
+::ng-deep .mat-menu-panel.myMenu > .mat-menu-content {
+  width: 300px !important;
+  height: auto !important;
+}
+
+::ng-deep .mat-menu-panel.zoommenu{
+  min-width: 80px !important;
+  max-width: auto !important;
+}
+
+::ng-deep .mat-menu-panel.language-menu{
+  min-width: 90px !important;
+  max-width: auto !important;
+  margin-left: 0.5rem;
+}
+
+/* ::ng-deep .cdk-overlay-connected-position-bounding-box{
+  right: 30px !important;
+}  */
+
+/* ::ng-deep #cdk-overlay-0{
+  right: 90px !important;
+}  */
+
+/* ::ng-deep #cdk-overlay-1{
+  right: 90px !important;
+} */
+
+/* ::ng-deep #cdk-overlay-3{
+  right: 90px !important;
+}  */
+
+
+/* ::ng-deep .cdk-overlay-pane{
+  position: relative !important;
+} */
+
+.dot{
+  height: 10px;
+  width: 10px;
+  background-color: #464A8C;
+  border-radius: 100%;
+  top: 20px;
+}
+.red-icon-card{
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  height:50px; 
+  width:50px;
+}
+.unread-icon-card{
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  height:41px; 
+  width:50px;
+}
+.img-fluid{
+  height: 90%;
+  width: 80px;
+}
+.hearder-logo{
+  background-color: #ffffff;
+  height: 100%;
+  width: 150px;
+  text-align: center;
+}
+
+.notification-icon{
+  color: white; 
+}
+
+.font-size-btn{
+  color: #000000DE;
+  background-color: #ffffff;
+  font-weight: 500;
+}
+
+.sel-font-size-btn{
+  color: #ffffff;
+  background-color: #03A64A;
+  font-weight: 600;
+}
+
+@media screen and (max-width:550px){
+  .notification-icon{
+    margin: 0px;
+    color: white;
+  }
+  .notification-btn{
+    padding: 0 6px;
+    width: 40px;
+  }
+  .selected-lang{
+    display: none;
+  }
+}
+
+/* @-moz-document url-prefix() {
+  #zoomItemBtn {
+    display:none;
+  }
+} */

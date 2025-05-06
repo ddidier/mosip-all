@@ -1,0 +1,31 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="RESIDENT-UI-AUTOMATION-RUN">
+	
+	<test thread-count="5" name="RESIDENT-UI-AUTOMATION-RUN">
+	
+		<classes>
+			<class name="io.mosip.testrig.residentui.testcase.GetInformation" />
+			<class name="io.mosip.testrig.residentui.testcase.GetPersonalisedCard" />
+			<class name="io.mosip.testrig.residentui.testcase.LoginTest" />
+			<class name="io.mosip.testrig.residentui.testcase.ManageMyVid" />
+			<class name="io.mosip.testrig.residentui.testcase.SecureMyId" />
+			<class name="io.mosip.testrig.residentui.testcase.ShareMyData" />
+			<class name="io.mosip.testrig.residentui.testcase.TrackMyRequests" />
+			<class name="io.mosip.testrig.residentui.testcase.UpdateMyData" />
+			<class name="io.mosip.testrig.residentui.testcase.VerifyPhoneNumberEmailID" />
+			<class name="io.mosip.testrig.residentui.testcase.ViewMyHistory" />
+			<class name="io.mosip.testrig.residentui.testcase.GetMyUIN" />
+		</classes>
+	</test>
+		<listeners>
+		
+	
+
+		<listener
+			  class-name="io.mosip.testrig.residentui.utility.EmailableReport" />
+			
+	</listeners>
+
+</suite>

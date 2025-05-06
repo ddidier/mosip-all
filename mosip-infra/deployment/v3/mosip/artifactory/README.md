@@ -1,0 +1,6 @@
+# Artifactory
+
+## Install
+```
+$ ./install.sh
+```

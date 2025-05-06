@@ -1,0 +1,62 @@
+<div class="main-container">
+  <span class="breadcrumb" [style.font-size]="fontSize.breadcrumb">
+    <a
+      (click)="onItemSelected('uinservices/dashboard')">{{'dashboard.uinservices' | translate}} &nbsp;&nbsp;</a> >
+    &nbsp;&nbsp;<a *ngIf="source1 && popupMessages" (click)="onItemSelected('uinservices/viewhistory')">{{popupMessages.breadCrumbNames[source1]}}</a>
+    &nbsp;&nbsp;<a *ngIf="source2 && popupMessages" (click)="onItemSelected('trackservicerequest')">> {{popupMessages.breadCrumbNames[source2]}}</a>
+    &nbsp;&nbsp; >  &nbsp; <span class="active">{{"grievanceRedressal.title" | translate}}</span>
+  </span>
+  <div class="form-container">
+    <mat-card class="form-card">
+      <mat-card-title [style.font-size]="fontSize.heading" *ngIf="grievanceData" class="main-heading">{{grievanceData.title | translate}}</mat-card-title>
+      <div [style.font-size]="fontSize.paragraph">
+        <div class="input-container" *ngIf="grievanceData && userFormData.name">
+          <div class="each-property-card">
+            <label class="label">{{grievanceData.namelabel}}</label>
+            <input [style.font-size]="fontSize.lableText" id="userFullName" class="input-card" [readonly]="true"   [value]="userFormData.name" required type="text" name="name"/>
+          </div>
+          <div class="each-property-card">
+            <label class="label">{{grievanceData.emailidlabel}}</label>
+            <input [style.font-size]="fontSize.lableText" id="emailID" class="input-card" [readonly]="true" [value]="userFormData.emailId" type="text" name="emailId"/>
+          </div>
+          <div class="each-property-card">
+            <label class="label">{{grievanceData.alternateemailidlabel}}</label>
+            <div class="input-card">
+              <input [style.font-size]="fontSize.lableText" id="alternateEmailID" [attr.maxLength]="emailCharLimit" placeholder="{{grievanceData.alternateEmailPlaceholder}}" type="text" name="alternateEmailId" (blur)="captureValue($event, 'alternateEmailId')" (focus)="captureVirtualKeyboard(search, 0)"  #keyboardRef/>
+              <em matSuffix class="material-icons mat-keyboard-icon" (click)="openKeyboard('alternateEmailID')">keyboard</em>
+            </div>
+          </div>
+          <div class="each-property-card">
+            <label class="label">{{grievanceData.phonenumberlabel}}</label>
+            <input [style.font-size]="fontSize.lableText" id="phoneNumber" class="input-card" [readonly]="true" [value]="userFormData.phoneNo" type="text" name="phoneNo"/>
+          </div>
+          <div class="each-property-card">
+            <label class="label">{{grievanceData.alternatephonenumberlabel}}</label>
+              <div class="input-card">
+                <input [style.font-size]="fontSize.lableText" id="alternatePhoneNumber" [attr.maxLength]="phoneCharLimit" placeholder={{grievanceData.alternatePhoneNoPlaceholder}} type="text" name="alternatePhoneNo" (blur)="captureValue($event, 'alternatePhoneNumber')" (focus)="captureVirtualKeyboard(search, 1)"  #keyboardRef/>
+                <em matSuffix class="material-icons mat-keyboard-icon" (click)="openKeyboard('alternatePhoneNumber')">keyboard</em>
+              </div>
+            </div >
+          <div class="each-property-card">
+            <label class="label">{{grievanceData.eventidlabel}}</label>
+            <input [style.font-size]="fontSize.lableText" id="eventID" class="input-card" [readonly]="true" [value]="userFormData.eventId" type="text" name="eventId"/>
+          </div>
+          <div class="each-property-card">
+            <label class="label">{{grievanceData.commentlabel}}</label>
+            <div class="message-input-card">
+              <div class="comment-input-sub-card">
+                <textarea [style.font-size]="fontSize.lableText" id="userComment" [attr.maxLength]="totalCommentCount" (input)="countCharacters($event, 'message')" (blur)="countCharacters($event,'message')" (focus)="captureVirtualKeyboard(search, 2)"  #keyboardRef placeholder={{grievanceData.EnterMsgPlaceholder}} rows="4" cols="60" name="message" ></textarea>
+                <em matSuffix class="material-icons mat-keyboard-icon" (click)="openKeyboard('userComment')">keyboard</em>
+              </div>
+                <span [style.font-size]="fontSize.breadcrumb" class="input-count" >{{grievanceData.TotalCharacters}}: {{totalCommentCount}}</span>
+              <span [style.font-size]="fontSize.breadcrumb" class="input-count" >{{grievanceData.remainingCharacters}}: {{remainingChars}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="bnt-card">
+        <button [style.font-size]="fontSize.paragraph" id="submitBtn" class="submit-btn" *ngIf="grievanceData" mat-raised-button color="primary" (click)="sendGrievanceRedressal()" >{{grievanceData.submitBtn}}</button>
+      </div>
+    </div>
+    </mat-card>
+  </div>
+</div>

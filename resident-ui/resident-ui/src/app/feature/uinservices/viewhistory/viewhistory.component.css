@@ -1,0 +1,330 @@
+ul,
+li {
+  list-style-type: none;
+  padding: 2px 0px 3px 9px;
+}
+
+.mini-card {
+  width: 90%;
+  height: 75%;
+  border-radius: 5px;
+  /*background: #F4F4F4 0% 0% no-repeat padding-box;*/
+}
+
+.tp-radio-group {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.tp-radio-button {
+  margin: 5px;
+}
+
+.tp-selected-value {
+  margin: 15px 0;
+}
+
+.mat-button-toggle-checked {
+  background-color: #03a64a;
+  color: white !important;
+}
+
+.mat-checkbox-checked.mat-accent .mat-checkbox-background {
+  background-color: #03a64a !important;
+}
+
+.mat-card-sm-image {
+  width: 32px;
+  height: 32px;
+}
+
+mat-card-content>p {
+  width: 100%;
+  text-align: center;
+}
+
+mat-card-actions {
+  width: 100%;
+  text-align: center;
+}
+
+label {
+  display: block;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+  padding: 10px 0px;
+}
+
+input {
+  width: 100%;
+  height: 38%;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 2px solid #909090;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.service-input-card{
+  border: none; 
+  outline: none;
+  height: 100%;
+}
+
+::placeholder {
+  text-align: left;
+  letter-spacing: 0px;
+  color: #BCBCBC;
+  opacity: 1;
+}
+
+.mat-primary .mat-pseudo-checkbox-checked,
+.mat-primary .mat-pseudo-checkbox-indeterminate {
+  color: #03A64A !important;
+}
+
+.mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+  color: black !important;
+}
+
+.date-input {
+  border: 2px solid #8B8B8B;
+}
+
+span.label {
+  color: #707070;
+  font-size: 14px;
+  width: 100%;
+  padding-bottom: 20px;
+}
+
+.search-input-label{
+  margin: 0 8px 14px 0;
+}
+
+span.input {
+  width: 100%;
+  height: 42px;
+  /* text-align: left; */
+  /* padding-left: 2px; */
+}
+
+/*.input-cards {
+  width: 16%;
+  padding: 10px;
+}
+
+
+.date-input-cards {
+  width: 18%;
+  padding: 10px;
+}*/
+
+::ng-deep .mat-grid-tile>.mat-figure{
+  justify-content: flex-start !important;
+  padding-left: 2px !important;
+}
+
+.datepicker-card {
+  /* width: 80%; */
+  height: 100%;
+  border: none;
+}
+
+.date-calender{
+  display: flex;
+  flex-direction: row;
+  border: 2px solid #909090;
+  padding: 2px 0 2px 2px;
+  border-radius: 5px;
+  align-items: center;
+}
+
+::ng-deep .mat-menu-panel{
+  max-width: 100% !important;
+}
+
+mat-select {
+  outline: 2px solid !important;
+  outline-color: #909090 !important;
+  border-radius: 5px;
+}
+
+/*@media screen and (max-width:1500px) {
+  .datepicker-card {
+    width: 60%;
+    height: 37px;
+  }
+}*/
+
+::ng-deep .mat-expansion-panel-header
+{
+    height: auto !important;
+}
+
+.main-div-viewhistory{
+  padding-top: 20px;
+  width: 95%;
+  display: block;
+  margin-left:auto;
+  margin-right:auto; 
+}
+
+.back-button{
+  width: 100px;
+  height: 36px;
+  background: #909090;
+  border-radius: 5px;
+  color: #ffffff;
+}
+.history-data{
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 1em;
+}
+
+::ng-deep .mat-paginator-page-size {
+  display: flex;
+  align-items: center !important;
+  margin-right: 8px;
+}
+
+::ng-deep.mat-paginator .mat-select-value {
+  padding-top: 12px !important;
+  padding-left: 5px !important;
+}
+
+::ng-deep.mat-paginator .mat-select-arrow-wrapper {
+  display: table-cell !important;
+}
+
+.check-box-card {
+  display: flex;
+  align-items: center;
+}
+
+input[dir=rtl]::placeholder {
+  text-align: right;
+}
+
+.check-box {
+  height: 17px;
+  width: 17px;
+  accent-color: #03A64A;
+  margin-right: 5px;
+}
+
+.dropdown-btn{
+  width: 100%;
+  height: 42px;
+  background-color: #FFFFFF;
+  border-radius: 5px;
+  border: 2px solid #909090;
+  margin-top: -6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: #9FA1AD;
+}
+
+.dropdown-arrow{
+  color: #909090;
+}
+.filter-lable{
+  font-size: 14px;
+  font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+  width: 90%;
+}
+
+.main-heading{
+  color: #505050; 
+  font-size:20px;
+}
+
+.event-id-search-card{
+  display: flex; 
+  align-items: center;
+  border-radius: 5px; 
+  border: 2px solid #909090;
+  margin-top: -5px;
+  padding-right: 5px;
+}
+
+.header-item-card{
+  display: flex; 
+  flex-direction: row;
+  justify-content: space-between; 
+  width: 100%;
+  align-items: center;
+}
+
+.event-id-text{
+  width: 35%;
+  padding: 10px;
+  color: #008CED;
+}
+
+.description-text{
+  width: 37%;
+  padding: 10px;
+}
+
+.date-text{
+  width: 13%;
+  padding: 10px;
+}
+
+.event-status-text{
+  width: 15%;
+  padding: 10px;
+}
+
+.more-details-card{
+  width: 100%;
+  padding: 10px 35px;
+}
+
+@media screen and (max-width:550px){
+  .header-item-card{
+    display: flex; 
+    flex-direction: column;
+    justify-content: space-between; 
+    width: 100%;
+    align-items: flex-start;
+    padding: 10px 2px 10px 2px;
+  }
+  .event-id-text{
+    width: 100%;
+    padding: 0;
+    margin-bottom: 5px;
+  }
+  .description-text{
+    width: 100%;
+    padding: 0;
+    margin-bottom: 5px;
+  }
+  .date-text{
+    width: 100%;
+    padding: 0;
+    margin-bottom: 5px;
+  }
+  .event-status-text{
+    width: 100%;
+    padding: 0;
+    margin-bottom: 5px;
+  }
+  .more-details-card{
+    width: 100%;
+    padding: 0;
+    margin-bottom: 5px;
+  }
+}
+
+.mat-expansion-panel-header{
+  padding: 0 10px;
+}
+::ng-deep .mat-expansion-indicator::after {
+  margin-left: 10px;
+}

@@ -1,0 +1,12 @@
+.main-container{
+    height: 85%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.text{
+    background-color: rgb(254 226 226);
+    color: rgb(185 28 28);
+    padding: 1rem;
+}

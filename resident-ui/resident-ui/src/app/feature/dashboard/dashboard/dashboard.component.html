@@ -1,0 +1,100 @@
+<div class="main-div" *ngIf="menuItems" dir="{{sitealignment}}">
+  <div class="item1 item-card" id="dashboardCard1" (click)="onItemSelected('UIN Services')">
+    <div class="title">
+      <span class="icon">
+        <img alt="" [ngClass]="langCode === 'ara' ? 'ara-dashboard-icons' :  'dashboard-icons'"
+          [src]='menuItems[0].icon' />
+      </span>
+      <span class="active-icon">
+        <img alt="" [ngClass]="langCode === 'ara' ? 'ara-dashboard-icons' :  'dashboard-icons'"
+          [src]='menuItems[0].activeIcon' />
+      </span>
+      <mat-card-title [style.font-size]="fontSize.heading" class="mat-card-title" [id]="menuItems[0].id" *ngIf="menuItems[0]">{{
+        menuItems[0].displayName}}</mat-card-title>
+    </div>
+    <p [style.font-size]="fontSize.paragraph" class="display-description">{{menuItems[0].displaydescription}}</p>
+    <p [style.font-size]="fontSize.paragraph" class="display-description" style="margin-top: 5px;">{{menuItems[0].availableServicesDescription}}</p>
+    <ul [style.font-size]="fontSize.paragraph" [ngClass]="langCode === 'ara' ? 'ara-uin-service-list' :  'uin-service-list'">
+      <li *ngFor="let subMenu of menuItems[0].subMenus">
+        {{ subMenu.displayName | translate }}</li>
+    </ul>
+    <div style="flex-grow: 1"></div>
+  </div>
+  <div class="item2 item-card" id="dashboardCard2" (click)="onItemSelected('Get Information')">
+    <div class="title">
+      <span class="icon">
+        <img alt="" [ngClass]="langCode === 'ara' ? 'ara-dashboard-icons' :  'dashboard-icons'"
+          [src]='menuItems[1].icon' />
+      </span>
+      <span class="active-icon">
+        <img alt="" [ngClass]="langCode === 'ara' ? 'ara-dashboard-icons' :  'dashboard-icons'"
+          [src]='menuItems[1].activeIcon' />
+      </span>
+      <mat-card-title [style.font-size]="fontSize.heading" class="mat-card-title" [id]="menuItems[1].id" *ngIf="menuItems[1]">{{ menuItems[1].displayName | translate }}
+      </mat-card-title>
+    </div>
+    <p [style.font-size]="fontSize.paragraph" class="display-description">{{menuItems[1].availableServicesDescription}}:</p>
+    <ul [style.font-size]="fontSize.paragraph" [ngClass]="langCode === 'ara' ? 'ara-uin-service-list' :  'uin-service-list'">
+      <li *ngFor="let subMenu of menuItems[1].subMenus">{{subMenu.displayName | translate }}</li>
+    </ul>
+    <div style="flex-grow: 1"></div>
+  </div>
+  <div class="item3 item-card" id="dashboardCard3" (click)="onItemSelected('Booking an Appointment')">
+    <div class="title">
+      <span class="icon">
+        <img alt="" [ngClass]="langCode === 'ara' ? 'ara-dashboard-icons' :  'dashboard-icons'"
+          [src]='menuItems[2].icon' />
+      </span>
+      <span class="active-icon">
+        <img alt="" [ngClass]="langCode === 'ara' ? 'ara-dashboard-icons' :  'dashboard-icons'"
+          [src]='menuItems[2].activeIcon' />
+      </span>
+      <mat-card-title [style.font-size]="fontSize.heading" class="mat-card-title" [id]="menuItems[2].id" *ngIf="menuItems[2]">{{
+        menuItems[2].displayName | translate }}</mat-card-title>
+    </div>
+    <mat-card-header>
+      <mat-card-subtitle [style.font-size]="fontSize.paragraph" id="submenus3"  *ngFor="let subMenu of menuItems[2].subMenus">{{
+        subMenu.displayName | translate }}</mat-card-subtitle>
+      <div style="flex-grow: 1"></div>
+    </mat-card-header>
+  </div>
+  <div class="item4 item-card" id="dashboardCard4" (click)="onItemSelected(menuItems[3].route)">
+    <div class="title">
+      <span class="icon">
+        <img alt="" [ngClass]="langCode === 'ara' ? 'ara-dashboard-icons' :  'dashboard-icons'"
+          [src]='menuItems[3].icon' />
+      </span>
+      <span class="active-icon">
+        <img alt="" [ngClass]="langCode === 'ara' ? 'ara-dashboard-icons' :  'dashboard-icons'"
+          [src]='menuItems[3].activeIcon' />
+      </span>
+      <mat-card-title [style.font-size]="fontSize.heading" class="mat-card-title" [id]="menuItems[3].id" *ngIf="menuItems[3]">{{ menuItems[3].displayName | translate }}
+      </mat-card-title>
+    </div>
+    <mat-card-header>
+      <mat-card-subtitle [style.font-size]="fontSize.paragraph" id="submenus4" *ngFor="let subMenu of menuItems[3].subMenus">{{
+        subMenu.displayName | translate }}</mat-card-subtitle>
+      <div style="flex-grow: 1"></div>
+    </mat-card-header>
+  </div>
+  <div class="item5 item-card" id="dashboardCard5" (click)="onItemSelected(menuItems[4].route)">
+    <div class="title">
+      <span class="icon">
+        <img alt="" [ngClass]="langCode === 'ara' ? 'ara-dashboard-icons' :  'dashboard-icons'"
+          [src]='menuItems[4].icon' />
+      </span>
+      <span class="active-icon">
+        <img alt="" [ngClass]="langCode === 'ara' ? 'ara-dashboard-icons' :  'dashboard-icons'"
+          [src]='menuItems[4].activeIcon' />
+      </span>
+      <mat-card-title [style.font-size]="fontSize.heading" class="mat-card-title" [id]="menuItems[4].id" *ngIf="menuItems[4]">{{
+        menuItems[4].displayName | translate }}
+      </mat-card-title>
+    </div>
+    <mat-card-header>
+      <mat-card-subtitle [style.font-size]="fontSize.paragraph" id="submenus5" *ngFor="let subMenu of menuItems[4].subMenus">{{
+        subMenu.displayName | translate }}</mat-card-subtitle>
+      <div style="flex-grow: 1"></div>
+    </mat-card-header>
+  </div>
+</div>

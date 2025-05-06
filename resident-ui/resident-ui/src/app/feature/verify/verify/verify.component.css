@@ -1,0 +1,240 @@
+.verify-phnumb-email-card {
+  width: 100%;
+  height: 628px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  box-shadow: 0px 0px 5px #00000014;
+  border-radius: 10px;
+  opacity: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: .6rem;
+}
+
+.button {
+  width: 45%;
+  height: 55px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  box-shadow: 0px 0px 10px #00000014;
+  border: 1px solid #E6E6E6;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #909090;
+  opacity: 1;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.btn-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  row-gap: 5px;
+  column-gap: 10px;
+  width: 100%;
+}
+
+/* .btn-card-xs {
+  display: contents;
+} */
+
+.main-container {
+  padding: 0 6% 0 6%;
+}
+
+.send-otp-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 450px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #D3D3D3;
+  border-radius: 10px;
+  opacity: 1;
+  margin: auto;
+  margin-top: 2rem;
+}
+
+.example-card {
+  height: 80vh;
+  text-align: middle;
+}
+
+label {
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+  margin-top: 1rem;
+  margin-bottom: 5px;
+}
+
+input {
+  width: 40%;
+  height: 36px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #909090;
+  border-radius: 5px;
+  opacity: 1;
+}
+
+.show-opt-panel-card{
+  min-width: 100%;
+  height: 628px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  box-shadow: 0px 0px 5px #00000014;
+  border-radius: 10px;
+  opacity: 1;
+  margin-top: 8px;
+}
+
+.button2 {
+  min-width: 108px;
+  height: 36px;
+  border:none;
+  color: #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #03A64A;
+
+}
+.get-uin-btn-card {
+  margin-top: 1.7rem;
+}
+
+.mobile-number {
+  font-weight: 700;
+}
+
+.otp-infromation-text {
+  text-align: center;
+  letter-spacing: NaNpx;
+  color: #000000;
+  opacity: 1;
+  font-size: 14px;
+  padding: 12px;
+  overflow-wrap: anywhere;
+}
+
+.otp-infromation-card {
+  width: 305px;
+  min-height: auto;
+  background: #E8FDF2 0% 0% no-repeat padding-box;
+  border-radius: 10px;
+  opacity: 1;
+  word-wrap: break-word;
+}
+
+.enter-opt-input {
+  width: 250px;
+  height: 36px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #909090;
+  border-radius: 5px;
+  opacity: 1;
+  margin-bottom: 1rem;
+  padding: 12px;
+}
+
+.otp-time-heading {
+  color: #000000;
+  font-weight: 600;
+}
+
+.otp-expire-time {
+  color: #03A64A;
+}
+
+.send-otp-btn{
+  background-color: #03A64A;
+  color: #fff;
+}
+
+.book-appointment-back-btn {
+  min-width: 100px;
+  height: 36px;
+  border: 1px solid #909090;
+  border-radius: 5px;
+  opacity: 1;
+  background-color: transparent;
+  text-align: left;
+  font-size: 16px;
+  letter-spacing: 0px;
+  color: #909090;
+  opacity: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+input{
+  outline: none;
+}
+
+.label-for-otp{
+  margin: 0;
+  font-size: 10px;
+}
+
+.uin-login-title-card {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0 4px 0;
+}
+
+.info-icon{
+  color: green;
+  font-size: 18px; 
+  cursor: pointer;
+  margin-left: 12px;
+}
+
+::ng-deep .mat-tooltip {
+     background-color: #fff !important;
+     color: black !important;
+     font-size: var(--fs) !important;
+     border-radius: 8px !important;
+     padding: 10px !important;
+     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5) !important;
+     margin-top: -2px !important;
+}
+
+
+@media screen and (max-width:900px){
+  .main-container{
+    padding: 0 2% 0 2%;
+  }
+  .button{
+    width: 60%;
+  }
+  .verify-phnumb-email-card{
+    padding: 5px;
+  }
+  input{
+    width: 60%;
+  }
+}
+
+@media screen and (max-width:600px){
+  .button {
+    width: 80%;
+  }
+  input{
+    width: 80%;
+  }
+}
+
+@media screen and (max-width:420px){
+  .button {
+    width: 98%;
+  }
+  input{
+    width: 95%;
+  }
+}

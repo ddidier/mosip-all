@@ -1,0 +1,160 @@
+.main-div{
+  padding: .5rem 0rem 1.5rem 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  row-gap: 0.6rem;
+  grid-template-areas: "item1 item2 item3"
+                       "item1 item4 item5";
+}
+
+.item1 {
+  grid-area: item1;
+}
+.item2{
+  grid-area: item2;
+}
+.itme3{
+  grid-area: item3;
+}
+.item4{
+  grid-area: item4;
+}
+.item5{
+  grid-area: item5;
+}
+
+.mat-card-subtitle {
+  cursor: pointer;
+  font-size: 14px;
+  color: #000000;
+}
+
+.uin-service-list{
+  padding-left: 15px;
+  color: #000000;
+  font-size: 14px;
+  line-height: 24px;
+  margin-top: 0px;
+}
+
+.ara-uin-service-list{
+  padding-right: 15px;
+  color: #000000;
+  font-size: 14px;
+  line-height: 24px;
+  margin-top: 0px;
+}
+
+.item-card {
+  width: 95%;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 10px #00000029;
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 20px;
+}
+
+.active-icon{
+  display: none;
+}
+
+.dashboard-icons{
+  width: 65px;
+  height: 65px;
+  margin-right: 6px;
+  margin-left: -5px;
+}
+
+.ara-dashboard-icons{
+  width: 65px;
+  height: 65px;
+  margin-right: -5px;
+  margin-left: 6px;
+}
+
+.display-description{
+  margin: 0px;
+  font-size: 14px;
+}
+
+div.item-card:hover{
+  background-color: rgb(3, 166, 74);
+  color: #ffffff;
+}
+
+.item-card:hover .icon{
+    display: none;
+}
+
+ div.item-card:hover .active-icon{
+  display: block;
+}
+
+.item-card:hover  .mat-card-title{
+  color: #ffffff;
+}
+
+.item-card:hover  .mat-card-subtitle{
+  color: #F4F4F4;
+  font-size: 14px;
+} 
+ 
+.item-card:hover  .uin-service-list{
+  color: #F4F4F4;
+}  
+.item-card:hover  .ara-uin-service-list{
+  color: #F4F4F4;
+}  
+
+.item-card>mat-card {
+  border: transparent;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.mat-card-title {
+  /* text-align: left;  */
+  font-size: 22px;
+  color: #464A8C;
+  font-weight: bold;
+}
+
+.title{
+  display: flex;
+  align-items: center;
+}
+
+.mat-card{
+  border-radius: 25px !important;
+}
+
+@media screen and (min-width:900px) and (max-width:1250px){
+  .main-div{
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:"item1 item2"
+                        "item1 item3"
+                        "item4 item5";
+  }
+
+}
+
+@media screen and (max-width:899px){
+  .main-div{
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 0.4fr 0.4fr 0.4fr 0.5fr;
+    grid-template-areas:"item1"
+                        "item2"
+                        "item3"
+                        "item4"
+                        "item5";
+  }
+}
+
+@media screen and (max-width:460px){
+  .item-card{
+    padding: 8px;
+  }
+}
